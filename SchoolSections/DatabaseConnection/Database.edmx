@@ -65,7 +65,14 @@
           </Key>
           <Property Name="Id_section" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
           <Property Name="Name" Type="varchar" MaxLength="50" Nullable="false" />
-          <Property Name="Capacity" Type="varchar" MaxLength="50" Nullable="false" />
+          <Property Name="Capacity" Type="decimal" Precision="2" Scale="0" Nullable="false" />
+        </EntityType>
+        <EntityType Name="SectionImage">
+          <Key>
+            <PropertyRef Name="Section_id" />
+          </Key>
+          <Property Name="Section_id" Type="int" Nullable="false" />
+          <Property Name="Image_Data" Type="image" />
         </EntityType>
         <EntityType Name="Student">
           <Key>
@@ -185,6 +192,18 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <Association Name="FK_SectionImage_Section">
+          <End Role="Section" Type="Self.Section" Multiplicity="1" />
+          <End Role="SectionImage" Type="Self.SectionImage" Multiplicity="0..1" />
+          <ReferentialConstraint>
+            <Principal Role="Section">
+              <PropertyRef Name="Id_section" />
+            </Principal>
+            <Dependent Role="SectionImage">
+              <PropertyRef Name="Section_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
         <Association Name="FK_Student_Class">
           <End Role="Class" Type="Self.Class" Multiplicity="0..1" />
           <End Role="Student" Type="Self.Student" Multiplicity="*" />
@@ -280,6 +299,7 @@
           <EntitySet Name="Manager" EntityType="Self.Manager" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Role" EntityType="Self.Role" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Section" EntityType="Self.Section" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="SectionImage" EntityType="Self.SectionImage" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Student" EntityType="Self.Student" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Student_manager" EntityType="Self.Student_manager" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="sysdiagrams" EntityType="Self.sysdiagrams" Schema="dbo" store:Type="Tables" />
@@ -305,6 +325,10 @@
           <AssociationSet Name="FK_Manager_Teacher" Association="Self.FK_Manager_Teacher">
             <End Role="Teacher" EntitySet="Teacher" />
             <End Role="Manager" EntitySet="Manager" />
+          </AssociationSet>
+          <AssociationSet Name="FK_SectionImage_Section" Association="Self.FK_SectionImage_Section">
+            <End Role="Section" EntitySet="Section" />
+            <End Role="SectionImage" EntitySet="SectionImage" />
           </AssociationSet>
           <AssociationSet Name="FK_Student_Class" Association="Self.FK_Student_Class">
             <End Role="Class" EntitySet="Class" />
@@ -348,6 +372,7 @@
           <EntitySet Name="Manager" EntityType="SchoolModel.Manager" />
           <EntitySet Name="Role" EntityType="SchoolModel.Role" />
           <EntitySet Name="Section" EntityType="SchoolModel.Section" />
+          <EntitySet Name="SectionImage" EntityType="SchoolModel.SectionImage" />
           <EntitySet Name="Student" EntityType="SchoolModel.Student" />
           <EntitySet Name="Student_manager" EntityType="SchoolModel.Student_manager" />
           <EntitySet Name="sysdiagrams" EntityType="SchoolModel.sysdiagrams" />
@@ -393,6 +418,10 @@
           <AssociationSet Name="FK_User_Role" Association="SchoolModel.FK_User_Role">
             <End Role="Role" EntitySet="Role" />
             <End Role="User" EntitySet="User" />
+          </AssociationSet>
+          <AssociationSet Name="FK_SectionImage_Section" Association="SchoolModel.FK_SectionImage_Section">
+            <End Role="Section" EntitySet="Section" />
+            <End Role="SectionImage" EntitySet="SectionImage" />
           </AssociationSet>
           <AssociationSet Name="FK_Student_manager_Student" Association="SchoolModel.FK_Student_manager_Student">
             <End Role="Student" EntitySet="Student" />
@@ -474,8 +503,17 @@
           </Key>
           <Property Name="Id_section" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
           <Property Name="Name" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
-          <Property Name="Capacity" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="Capacity" Type="Decimal" Nullable="false" Precision="2" Scale="0" />
           <NavigationProperty Name="Manager" Relationship="SchoolModel.FK_Manager_Section" FromRole="Section" ToRole="Manager" />
+          <NavigationProperty Name="SectionImage" Relationship="SchoolModel.FK_SectionImage_Section" FromRole="Section" ToRole="SectionImage" />
+        </EntityType>
+        <EntityType Name="SectionImage">
+          <Key>
+            <PropertyRef Name="Section_id" />
+          </Key>
+          <Property Name="Section_id" Type="Int32" Nullable="false" />
+          <Property Name="Image_Data" Type="Binary" MaxLength="Max" FixedLength="false" />
+          <NavigationProperty Name="Section" Relationship="SchoolModel.FK_SectionImage_Section" FromRole="SectionImage" ToRole="Section" />
         </EntityType>
         <EntityType Name="Student">
           <Key>
@@ -669,6 +707,18 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <Association Name="FK_SectionImage_Section">
+          <End Type="SchoolModel.Section" Role="Section" Multiplicity="1" />
+          <End Type="SchoolModel.SectionImage" Role="SectionImage" Multiplicity="0..1" />
+          <ReferentialConstraint>
+            <Principal Role="Section">
+              <PropertyRef Name="Id_section" />
+            </Principal>
+            <Dependent Role="SectionImage">
+              <PropertyRef Name="Section_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
         <Association Name="FK_Student_manager_Student">
           <End Type="SchoolModel.Student" Role="Student" Multiplicity="1" />
           <End Type="SchoolModel.Student_manager" Role="Student_manager" Multiplicity="*" />
@@ -765,6 +815,14 @@
                 <ScalarProperty Name="Capacity" ColumnName="Capacity" />
                 <ScalarProperty Name="Name" ColumnName="Name" />
                 <ScalarProperty Name="Id_section" ColumnName="Id_section" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="SectionImage">
+            <EntityTypeMapping TypeName="SchoolModel.SectionImage">
+              <MappingFragment StoreEntitySet="SectionImage">
+                <ScalarProperty Name="Image_Data" ColumnName="Image_Data" />
+                <ScalarProperty Name="Section_id" ColumnName="Section_id" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>

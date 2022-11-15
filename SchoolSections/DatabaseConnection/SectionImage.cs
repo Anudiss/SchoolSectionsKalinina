@@ -12,20 +12,11 @@ namespace SchoolSections.DatabaseConnection
     using System;
     using System.Collections.Generic;
     
-    public partial class Section
+    public partial class SectionImage
     {
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
-        public Section()
-        {
-            this.Manager = new HashSet<Manager>();
-        }
+        public int Section_id { get; set; }
+        public byte[] Image_Data { get; set; }
     
-        public int Id_section { get; set; }
-        public string Name { get; set; }
-        public decimal Capacity { get; set; }
-    
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<Manager> Manager { get; set; }
-        public virtual SectionImage SectionImage { get; set; }
+        public virtual Section Section { get; set; }
     }
 }

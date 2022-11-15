@@ -2,9 +2,65 @@
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:local="clr-namespace:SchoolSections"
+             xmlns:permissions="clr-namespace:SchoolSections.Permissions"
              xmlns:database="clr-namespace:SchoolSections.DatabaseConnection"
-             StartupUri="/Windows/MainWindow/MainWindow.xaml">
+             xmlns:converters="clr-namespace:SchoolSections.Components.Converters"
+             StartupUri="/Windows/AuthWindow/AuthWindow.xaml">
     <Application.Resources>
-        <database:ImageConverter x:Key="ImageConverter"/>
+        <converters:TeacherNameConverter x:Key="TeacherNameConverter"/>
+        <converters:ImageConverter x:Key="ImageConverter"/>
+
+        <permissions:PermissionToVisibilityConverter x:Key="PermissionToVisibilityConverter"/>
+
+        <Color x:Key="VeryDarkBlue" A="255" R="13" G="27" B="42"/>
+        <Color x:Key="DarkBlue" A="255" R="27" G="38" B="59"/>
+        <Color x:Key="Blue" A="255" R="65" G="90" B="119"/>
+        <Color x:Key="LightBlue" A="255" R="119" G="141" B="169"/>
+        <Color x:Key="Gray" A="255" R="224" G="225" B="221"/>
+        <Color x:Key="IncorrectInputColor" A="255" R="225" G="50" B="55"/>
+
+        <SolidColorBrush Color="{StaticResource VeryDarkBlue}" x:Key="VeryDarkBlueBackground"/>
+        <SolidColorBrush Color="{StaticResource DarkBlue}" x:Key="DarkBlueBackground"/>
+        <SolidColorBrush Color="{StaticResource Blue}" x:Key="BlueBackground"/>
+        <SolidColorBrush Color="{StaticResource LightBlue}" x:Key="LightBlueBackground"/>
+        <SolidColorBrush Color="{StaticResource Gray}" x:Key="GrayBackground"/>
+        <SolidColorBrush Color="{StaticResource IncorrectInputColor}" x:Key="IncorrectInputSolidBrush"/>
+
+        <Style TargetType="{x:Type Button}" x:Key="Button">
+            <Setter Property="Cursor" Value="Hand"/>
+
+            <Setter Property="Background" Value="{StaticResource LightBlueBackground}"/>
+            <Setter Property="Foreground" Value="{StaticResource DarkBlueBackground}"/>
+
+            <Setter Property="Margin" Value="20 10"/>
+            <Setter Property="Padding" Value="20 10"/>
+
+            <Setter Property="FontSize" Value="20"/>
+            <Setter Property="FontWeight" Value="Black"/>
+
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="{x:Type Button}">
+                        <Border Name="Border"
+                                Background="{TemplateBinding Background}"
+                                CornerRadius="10">
+                            <ContentPresenter Content="{TemplateBinding Content}"
+                                              VerticalAlignment="Center"
+                                              HorizontalAlignment="Center"
+                                              Margin="{TemplateBinding Padding}"/>
+                        </Border>
+
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter Property="Background" Value="{StaticResource BlueBackground}"/>
+                            </Trigger>
+                            <Trigger Property="IsMouseCaptured" Value="True">
+                                <Setter Property="Foreground" Value="{StaticResource GrayBackground}"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
     </Application.Resources>
 </Application>

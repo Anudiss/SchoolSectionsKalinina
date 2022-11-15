@@ -4,21 +4,22 @@
   <edmx:Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
     <!-- Diagram content (shape and connector positions) -->
     <edmx:Diagrams>
-      <Diagram DiagramId="69a1aa9c215c49e9a9f2eedda8d31750" Name="Diagram1" ZoomLevel="86">
-        <EntityTypeShape EntityType="SchoolModel.Attendance" Width="1.5" PointX="12" PointY="4.75" />
-        <EntityTypeShape EntityType="SchoolModel.Attendance_students" Width="1.5" PointX="14.25" PointY="4.75" />
-        <EntityTypeShape EntityType="SchoolModel.Class" Width="1.5" PointX="9.75" PointY="9" />
-        <EntityTypeShape EntityType="SchoolModel.DayOfWeek" Width="1.5" PointX="7.5" PointY="1.375" />
-        <EntityTypeShape EntityType="SchoolModel.Image" Width="1.5" PointX="0.75" PointY="7" />
-        <EntityTypeShape EntityType="SchoolModel.Manager" Width="1.5" PointX="7.5" PointY="3.875" />
-        <EntityTypeShape EntityType="SchoolModel.Role" Width="1.5" PointX="0.75" PointY="4.25" />
-        <EntityTypeShape EntityType="SchoolModel.Section" Width="1.5" PointX="5.25" PointY="1.125" />
-        <EntityTypeShape EntityType="SchoolModel.Student" Width="1.5" PointX="12" PointY="8.375" />
-        <EntityTypeShape EntityType="SchoolModel.Student_manager" Width="1.5" PointX="9.75" PointY="4" />
-        <EntityTypeShape EntityType="SchoolModel.sysdiagrams" Width="1.5" PointX="2.75" PointY="7" />
-        <EntityTypeShape EntityType="SchoolModel.Teacher" Width="1.5" PointX="5.25" PointY="3.875" />
-        <EntityTypeShape EntityType="SchoolModel.Timetable" Width="1.5" PointX="9.75" PointY="0.75" />
-        <EntityTypeShape EntityType="SchoolModel.User" Width="1.5" PointX="3" PointY="4" />
+      <Diagram DiagramId="69a1aa9c215c49e9a9f2eedda8d31750" Name="Diagram1" ZoomLevel="83">
+        <EntityTypeShape EntityType="SchoolModel.Attendance" Width="1.5" PointX="7.5" PointY="1" />
+        <EntityTypeShape EntityType="SchoolModel.Attendance_students" Width="1.5" PointX="9.75" PointY="1" />
+        <EntityTypeShape EntityType="SchoolModel.Class" Width="1.5" PointX="5.25" PointY="8.125" />
+        <EntityTypeShape EntityType="SchoolModel.DayOfWeek" Width="1.5" PointX="3" PointY="1.25" />
+        <EntityTypeShape EntityType="SchoolModel.Image" Width="1.5" PointX="7.75" PointY="4.75" />
+        <EntityTypeShape EntityType="SchoolModel.Manager" Width="1.5" PointX="3" PointY="3.875" />
+        <EntityTypeShape EntityType="SchoolModel.Role" Width="1.5" PointX="1.5" PointY="13.25" />
+        <EntityTypeShape EntityType="SchoolModel.Section" Width="1.5" PointX="0.75" PointY="4" />
+        <EntityTypeShape EntityType="SchoolModel.SectionImage" Width="1.5" PointX="3" PointY="7.375" />
+        <EntityTypeShape EntityType="SchoolModel.Student" Width="1.5" PointX="7.5" PointY="7.5" />
+        <EntityTypeShape EntityType="SchoolModel.Student_manager" Width="1.5" PointX="5.25" PointY="4" />
+        <EntityTypeShape EntityType="SchoolModel.sysdiagrams" Width="1.5" PointX="9.75" PointY="4.75" />
+        <EntityTypeShape EntityType="SchoolModel.Teacher" Width="1.5" PointX="0.75" PointY="0.875" />
+        <EntityTypeShape EntityType="SchoolModel.Timetable" Width="1.5" PointX="5.25" PointY="0.75" />
+        <EntityTypeShape EntityType="SchoolModel.User" Width="1.5" PointX="1.5" PointY="10" />
         <AssociationConnector Association="SchoolModel.FK_Attendance_students_Attendance" />
         <AssociationConnector Association="SchoolModel.FK_Attendance_Timetable" />
         <AssociationConnector Association="SchoolModel.FK_Attendance_students_Student" />
@@ -29,6 +30,7 @@
         <AssociationConnector Association="SchoolModel.FK_Student_manager_Manager" />
         <AssociationConnector Association="SchoolModel.FK_Timetable_Manager" />
         <AssociationConnector Association="SchoolModel.FK_User_Role" />
+        <AssociationConnector Association="SchoolModel.FK_SectionImage_Section" />
         <AssociationConnector Association="SchoolModel.FK_Student_manager_Student" />
         <AssociationConnector Association="SchoolModel.FK_Teacher_User" />
       </Diagram>

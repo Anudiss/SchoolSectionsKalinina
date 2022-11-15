@@ -33,6 +33,7 @@ namespace SchoolSections.DatabaseConnection
         public virtual DbSet<Manager> Manager { get; set; }
         public virtual DbSet<Role> Role { get; set; }
         public virtual DbSet<Section> Section { get; set; }
+        public virtual DbSet<SectionImage> SectionImage { get; set; }
         public virtual DbSet<Student> Student { get; set; }
         public virtual DbSet<Student_manager> Student_manager { get; set; }
         public virtual DbSet<sysdiagrams> sysdiagrams { get; set; }

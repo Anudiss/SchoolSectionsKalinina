@@ -1,9 +1,15 @@
 ﻿using SchoolSections.DatabaseConnection;
+using System.ComponentModel;
+using System.Runtime.CompilerServices;
 
 namespace SchoolSections.Permissions
 {
-    public static class SessionData
+    public class SessionData
     {
-        public static User AuthorizatedUser { get; set; }
+        public static User AuthorizatedUser
+        {
+            get;
+            set;
+        }
     }
 }
