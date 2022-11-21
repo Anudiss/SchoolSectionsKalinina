@@ -24,6 +24,7 @@ namespace SchoolSections.DatabaseConnection
         public int Id_manager { get; set; }
         public int Section_id { get; set; }
         public int Teacher_id { get; set; }
+        public Nullable<bool> IsDeleted { get; set; }
     
         public virtual Section Section { get; set; }
         public virtual Teacher Teacher { get; set; }

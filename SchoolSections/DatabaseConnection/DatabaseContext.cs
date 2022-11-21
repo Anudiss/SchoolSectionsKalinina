@@ -12,6 +12,10 @@ namespace SchoolSections.DatabaseConnection
 
             Entities.User.Load();
             Entities.Image.Load();
+            Entities.Timetable.Load();
+            Entities.Section.Load();
+            Entities.Teacher.Load();
+            Entities.DayOfWeek.Load();
         }
     }
 }

@@ -12,14 +12,11 @@ namespace SchoolSections.DatabaseConnection
     using System;
     using System.Collections.Generic;
     
-    public partial class Student_manager
+    public partial class TeacherImage
     {
-        public int Id_student_section { get; set; }
-        public int Student_id { get; set; }
-        public int Manager_id { get; set; }
-        public Nullable<bool> IsDeleted { get; set; }
+        public int Teacher_id { get; set; }
+        public byte[] Image_Data { get; set; }
     
-        public virtual Manager Manager { get; set; }
-        public virtual Student Student { get; set; }
+        public virtual Teacher Teacher { get; set; }
     }
 }

@@ -1,0 +1,133 @@
+﻿<Window x:Class="SchoolSections.Windows.MainWindow.Pages.SectionResources.SectionEditWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:system="clr-namespace:Microsoft.CSharp;assembly=System"
+        xmlns:local="clr-namespace:SchoolSections.Windows.MainWindow.Pages.SectionResources"
+        xmlns:database="clr-namespace:SchoolSections.DatabaseConnection"
+        xmlns:uc="clr-namespace:SchoolSections.Components.UserControls"
+        xmlns:toolkit="http://schemas.microsoft.com/wpf/2008/toolkit"
+        xmlns:permission="clr-namespace:SchoolSections.Permissions"
+        mc:Ignorable="d"
+        Title="SectionEditWindow"
+        ResizeMode="NoResize" SizeToContent="WidthAndHeight" WindowStartupLocation="CenterScreen"
+        Background="{StaticResource DarkBlueBackground}"
+        Name="SectionEditWindowRoot"
+        Closing="OnClosing">
+
+    <Window.Resources>
+        <Style TargetType="{x:Type uc:InputField}">
+            <Setter Property="FontSize" Value="18"/>
+            <Setter Property="LabelFontSize" Value="18"/>
+            <Setter Property="Foreground" Value="{StaticResource GrayBackground}"/>
+            <Setter Property="LabelForeground" Value="{StaticResource GrayBackground}"/>
+            <Setter Property="Margin" Value="10 5 10 10"/>
+        </Style>
+    </Window.Resources>
+
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="Auto"/>
+            <ColumnDefinition Width="Auto"/>
+        </Grid.ColumnDefinitions>
+        
+        <StackPanel x:Name="SectionEditPanel" Orientation="Vertical"
+                    VerticalAlignment="Top"
+                    Grid.Column="0">
+            <Image x:Name="Image"
+                   Cursor="Hand"
+                   Width="200" Height="200"
+                   Source="{Binding ElementName=SectionEditWindowRoot, Path=Section.Image}"
+                   Margin="10"
+                   PreviewMouseDown="OnImageClick"/>
+
+            <uc:InputField x:Name="TitleField" Label="Название"
+                           Text="{Binding ElementName=SectionEditWindowRoot, Path=Section.Name}"/>
+            <uc:InputField x:Name="CapacityField" Label="Вместимость"
+                           Text="{Binding ElementName=SectionEditWindowRoot, Path=Section.Capacity}"
+                           IsValidable="True" OnValidate="OnCapacityValidate"
+                           ErrorMessage="Тут должно быть число от 1 до 25"/>
+            <uc:InputField x:Name="DurationField" Label="Длительность"
+                           Text="{Binding ElementName=SectionEditWindowRoot, Path=Section.Duration, StringFormat=\{0:h\\:mm\}}"
+                           IsValidable="True" OnValidate="OnDurationValidate"
+                           ErrorMessage="Тут должно быть время"
+                           TextChangingEnd="OnDurationFieldTextChangingEnd"/>
+
+            <Button Content="Сохранить" Style="{StaticResource Button}" Click="OnSave"/>
+        </StackPanel>
+        <StackPanel Orientation="Horizontal"
+                    Grid.Column="1">
+            <Rectangle Fill="{StaticResource VeryDarkBlueBackground}"
+                       Width="2" Height="Auto"
+                       Margin="5 2"/>
+            <Grid Margin="20 5">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="*"/>
+                    <RowDefinition Height="Auto"/>
+                </Grid.RowDefinitions>
+
+                <TextBlock Text="Расписание"
+                           HorizontalAlignment="Center"
+                           FontSize="20" FontWeight="Black"
+                           Foreground="{StaticResource GrayBackground}"
+                           Margin="0 0 0 20"
+                           Grid.Row="0"/>
+
+                <DataGrid ItemsSource="{Binding ElementName=SectionEditWindowRoot, Path=Timetables}"
+                          Name="TimetableContainer"
+                          Grid.Row="1"
+                          Margin="20 0"
+                          IsReadOnly="False"
+                          CellEditEnding="DataGrid_CellEditEnding"
+                          CanUserAddRows="False"
+                          AutoGenerateColumns="False">
+                    <DataGrid.Resources>
+                        <Style TargetType="{x:Type DataGridCell}">
+                            <Setter Property="TextBlock.TextAlignment" Value="Center"/>
+                        </Style>
+                    </DataGrid.Resources>
+
+                    <DataGrid.Columns>
+                        <DataGridComboBoxColumn Header="Преподаватель"
+                                            SelectedItemBinding="{Binding Path=Manager.Teacher}"
+                                            DisplayMemberPath="FullName"
+                                            SelectedValueBinding="{Binding Path=Manager.Teacher}">
+                            <DataGridComboBoxColumn.ElementStyle>
+                                <Style TargetType="{x:Type ComboBox}">
+                                    <Setter Property="ItemsSource" Value="{Binding ElementName=SectionEditWindowRoot, Path=Teachers}" />
+                                </Style>
+                            </DataGridComboBoxColumn.ElementStyle>
+                            <DataGridComboBoxColumn.EditingElementStyle>
+                                <Style TargetType="{x:Type ComboBox}">
+                                    <Setter Property="ItemsSource" Value="{Binding ElementName=SectionEditWindowRoot, Path=Teachers}" />
+                                </Style>
+                            </DataGridComboBoxColumn.EditingElementStyle>
+                        </DataGridComboBoxColumn>
+                        <DataGridTextColumn Header="Понедельник" Binding="{Binding StringFormat=\{0:h\\:mm\}, Path=Monday, TargetNullValue='-'}"/>
+                        <DataGridTextColumn Header="Вторник" Binding="{Binding StringFormat=\{0:h\\:mm\}, Path=Tuesday, TargetNullValue='-'}"/>
+                        <DataGridTextColumn Header="Среда" Binding="{Binding StringFormat=\{0:h\\:mm\}, Path=Wednesday, TargetNullValue='-'}"/>
+                        <DataGridTextColumn Header="Четверг" Binding="{Binding StringFormat=\{0:h\\:mm\}, Path=Thursday, TargetNullValue='-'}"/>
+                        <DataGridTextColumn Header="Пятница" Binding="{Binding StringFormat=\{0:h\\:mm\}, Path=Friday, TargetNullValue='-'}"/>
+                        <DataGridTextColumn Header="Суббота" Binding="{Binding StringFormat=\{0:h\\:mm\}, Path=Saturday, TargetNullValue='-'}"/>
+                        <DataGridTextColumn Header="Воскресенье" Binding="{Binding StringFormat=\{0:h\\:mm\}, Path=Sunday, TargetNullValue='-'}"/>
+                    </DataGrid.Columns>
+                </DataGrid>
+                <StackPanel Orientation="Horizontal" HorizontalAlignment="Right"
+                        Margin="0 0 10 0"
+                        Grid.Row="2">
+                    <StackPanel.Resources>
+                        <Style TargetType="{x:Type Button}" BasedOn="{StaticResource Button}">
+                            <Setter Property="Margin" Value="2 10"/>
+                            <Setter Property="Padding" Value="10 5"/>
+                        </Style>
+                    </StackPanel.Resources>
+
+                    <Button Content="Удалить" Click="OnRemoveTimetableClick"/>
+                    <Button Content="Добавить" Click="OnAddTimetableClick"/>
+                </StackPanel>
+            </Grid>
+        </StackPanel>
+    </Grid>
+</Window>

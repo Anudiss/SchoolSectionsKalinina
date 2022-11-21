@@ -19,6 +19,28 @@ namespace SchoolSections.Components.UserControls
     /// </summary>
     public partial class InputField : UserControl
     {
+        #region Is error open
+        public bool IsErrorOpen
+        {
+            get { return (bool)GetValue(IsErrorOpenProperty); }
+            set { SetValue(IsErrorOpenProperty, value); }
+        }
+
+        // Using a DependencyProperty as the backing store for IsErrorOpen.  This enables animation, styling, binding, etc...
+        public static readonly DependencyProperty IsErrorOpenProperty =
+            DependencyProperty.Register("IsErrorOpen", typeof(bool), typeof(InputField), new PropertyMetadata(false));
+        #endregion
+        #region Error message
+        public string ErrorMessage
+        {
+            get { return (string)GetValue(ErrorMessageProperty); }
+            set { SetValue(ErrorMessageProperty, value); }
+        }
+
+        // Using a DependencyProperty as the backing store for ErrorMessage.  This enables animation, styling, binding, etc...
+        public static readonly DependencyProperty ErrorMessageProperty =
+            DependencyProperty.Register("ErrorMessage", typeof(string), typeof(InputField), new PropertyMetadata(""));
+        #endregion
         #region Text properties
         #region TextChanged event
         /// <summary>
@@ -39,7 +61,40 @@ namespace SchoolSections.Components.UserControls
 
         // Using a DependencyProperty as the backing store for Text.  This enables animation, styling, binding, etc...
         public static readonly DependencyProperty TextProperty =
-            DependencyProperty.Register("Text", typeof(string), typeof(InputField));
+            DependencyProperty.Register("Text", typeof(string), typeof(InputField), new PropertyMetadata(""));
+        #endregion
+        #region Caret color
+        public Color CaretColor
+        {
+            get { return (Color)GetValue(CaretColorProperty); }
+            set { SetValue(CaretColorProperty, value); }
+        }
+
+        // Using a DependencyProperty as the backing store for CaretColor.  This enables animation, styling, binding, etc...
+        public static readonly DependencyProperty CaretColorProperty =
+            DependencyProperty.Register("CaretColor", typeof(Color), typeof(InputField), new PropertyMetadata(Colors.White));
+        #endregion
+        #region IsReadOnly
+        public bool IsReadOnly
+        {
+            get { return (bool)GetValue(IsReadOnlyProperty); }
+            set { SetValue(IsReadOnlyProperty, value); }
+        }
+
+        // Using a DependencyProperty as the backing store for IsReadOnly.  This enables animation, styling, binding, etc...
+        public static readonly DependencyProperty IsReadOnlyProperty =
+            DependencyProperty.Register("IsReadOnly", typeof(bool), typeof(InputField), new PropertyMetadata(false));
+        #endregion
+        #region
+        public string Placeholder
+        {
+            get { return (string)GetValue(PlaceholderProperty); }
+            set { SetValue(PlaceholderProperty, value); }
+        }
+
+        // Using a DependencyProperty as the backing store for Placeholder.  This enables animation, styling, binding, etc...
+        public static readonly DependencyProperty PlaceholderProperty =
+            DependencyProperty.Register("Placeholder", typeof(string), typeof(InputField));
         #endregion
         #endregion
         #region Label properties
@@ -92,7 +147,11 @@ namespace SchoolSections.Components.UserControls
         public bool IsValid
         {
             get { return (bool)GetValue(IsValidProperty); }
-            set { SetValue(IsValidProperty, value); }
+            set
+            { 
+                SetValue(IsValidProperty, value);
+                IsErrorOpen = !value && IsValidable;
+            }
         }
 
         // Using a DependencyProperty as the backing store for IsValid.  This enables animation, styling, binding, etc...
@@ -110,6 +169,7 @@ namespace SchoolSections.Components.UserControls
         public static readonly DependencyProperty IsValidableProperty =
             DependencyProperty.Register("IsValidable", typeof(bool), typeof(InputField), new PropertyMetadata(false));
         #endregion
+        public event Action TextChangingEnd;
 
         public event ValidateEventHandler OnValidate;
 
@@ -122,6 +182,9 @@ namespace SchoolSections.Components.UserControls
         {
             IsValid = OnValidate?.Invoke(this, new ValidateEventArgs() { Text = Text ?? string.Empty }) == true || !IsValidable;
         }
+
+        private void OnTextChangingEnded(object sender, RoutedEventArgs e) =>
+            TextChangingEnd?.Invoke();
     }
 
     public struct ValidateEventArgs

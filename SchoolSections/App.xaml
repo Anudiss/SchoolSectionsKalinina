@@ -9,8 +9,14 @@
     <Application.Resources>
         <converters:TeacherNameConverter x:Key="TeacherNameConverter"/>
         <converters:ImageConverter x:Key="ImageConverter"/>
+        <converters:FIOConverter x:Key="FIOConverter"/>
+        <converters:TimetableByDayConverter x:Key="TimetableByDayConverter"/>
+        <converters:SectionToTimetableConverter x:Key="SectionToTimetableConverter"/>
 
         <permissions:PermissionToVisibilityConverter x:Key="PermissionToVisibilityConverter"/>
+
+        <ImageBrush x:Key="Noimage" ImageSource="{Binding Converter={StaticResource ImageConverter},
+                                                          ConverterParameter='noimage'}"/>
 
         <Color x:Key="VeryDarkBlue" A="255" R="13" G="27" B="42"/>
         <Color x:Key="DarkBlue" A="255" R="27" G="38" B="59"/>
@@ -43,6 +49,7 @@
                     <ControlTemplate TargetType="{x:Type Button}">
                         <Border Name="Border"
                                 Background="{TemplateBinding Background}"
+                                Margin="{TemplateBinding Margin}"
                                 CornerRadius="10">
                             <ContentPresenter Content="{TemplateBinding Content}"
                                               VerticalAlignment="Center"
@@ -55,12 +62,49 @@
                                 <Setter Property="Background" Value="{StaticResource BlueBackground}"/>
                             </Trigger>
                             <Trigger Property="IsMouseCaptured" Value="True">
-                                <Setter Property="Foreground" Value="{StaticResource GrayBackground}"/>
+                                <Setter Property="Foreground">
+                                    <Setter.Value>
+                                        <SolidColorBrush Color="{StaticResource DarkBlue}" Opacity=".7"/>
+                                    </Setter.Value>
+                                </Setter>
                             </Trigger>
                         </ControlTemplate.Triggers>
                     </ControlTemplate>
                 </Setter.Value>
             </Setter>
+        </Style>
+        <Style TargetType="{x:Type ListBoxItem}" x:Key="ItemsContainerStyle">
+            <Setter Property="Opacity" Value="0.85"/>
+            <Setter Property="Background">
+                <Setter.Value>
+                    <SolidColorBrush Color="{StaticResource Blue}" Opacity=".7"/>
+                </Setter.Value>
+            </Setter>
+
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="{x:Type ListBoxItem}">
+                        <Border x:Name="Border"
+                                        Background="{TemplateBinding Background}">
+                            <ContentPresenter ContentSource="Content"
+                                                      Margin="2 3"/>
+                        </Border>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+
+            <Style.Triggers>
+                <Trigger Property="IsMouseOver" Value="True">
+                    <Setter Property="Opacity" Value="1"/>
+                </Trigger>
+                <Trigger Property="IsSelected" Value="True">
+                    <Setter Property="Background">
+                        <Setter.Value>
+                            <SolidColorBrush Color="{StaticResource LightBlue}" Opacity=".6"/>
+                        </Setter.Value>
+                    </Setter>
+                </Trigger>
+            </Style.Triggers>
         </Style>
     </Application.Resources>
 </Application>

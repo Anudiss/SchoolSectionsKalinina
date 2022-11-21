@@ -12,6 +12,13 @@
         Background="{StaticResource DarkBlueBackground}"
         Name="MainWindowRoot">
 
+    <Window.Resources>
+        <Style TargetType="{x:Type Button}" BasedOn="{StaticResource Button}">
+            <Setter Property="Margin" Value="10 5"/>
+            <Setter Property="Padding" Value="10"/>
+        </Style>
+    </Window.Resources>
+    
     <Grid>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="200"/>
@@ -30,8 +37,8 @@
 
         <StackPanel Orientation="Vertical"
                     Grid.Row="1" Grid.Column="0">
-            <Button Content="Кружки" Style="{StaticResource Button}"/>
-            <Button Content="Кружки" Style="{StaticResource Button}"/>
+            <Button Content="Кружки" Click="OnSectionClick"/>
+            <Button Content="Учителя" Click="OnTeacherClick"/>
         </StackPanel>
 
         <Menu Background="Transparent"

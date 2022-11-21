@@ -1,4 +1,5 @@
-﻿using System;
+﻿using SchoolSections.Components.Converters;
+using System;
 using System.Windows;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
@@ -13,8 +14,12 @@ namespace SchoolSections.DatabaseConnection
             {
                 try
                 {
-                    return (BitmapSource)new ImageSourceConverter().ConvertFrom(Image_Data);
-                } catch(NotSupportedException) { return DatabaseConnection.Image.GetImageByName("Noimage").BitmapImage; }
+                    return Image_Data.ConvertFromArray();
+                }
+                catch(Exception)
+                {
+                    return DatabaseConnection.Image.GetImageByName("Noimage").BitmapImage;
+                }
             }
         }
     }

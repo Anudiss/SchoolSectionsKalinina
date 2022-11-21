@@ -27,6 +27,7 @@ namespace SchoolSections.DatabaseConnection
         public string Partonymic { get; set; }
         public Nullable<int> ClassNumber { get; set; }
         public string ClassPrefix { get; set; }
+        public Nullable<bool> IsDeleted { get; set; }
     
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<Attendance_students> Attendance_students { get; set; }

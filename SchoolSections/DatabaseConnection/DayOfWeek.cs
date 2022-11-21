@@ -18,6 +18,7 @@ namespace SchoolSections.DatabaseConnection
         public DayOfWeek()
         {
             this.Timetable = new HashSet<Timetable>();
+            this.Worktime = new HashSet<Worktime>();
         }
     
         public int Id_dayOfWeek { get; set; }
@@ -25,5 +26,7 @@ namespace SchoolSections.DatabaseConnection
     
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<Timetable> Timetable { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<Worktime> Worktime { get; set; }
     }
 }

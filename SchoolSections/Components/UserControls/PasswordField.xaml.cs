@@ -26,6 +26,17 @@ namespace SchoolSections.Components.UserControls
         #region Password
         public string Password => PasswordComponent.Password;
         #endregion
+        #region Caret color
+        public Color CaretColor
+        {
+            get { return (Color)GetValue(CaretColorProperty); }
+            set { SetValue(CaretColorProperty, value); }
+        }
+
+        // Using a DependencyProperty as the backing store for CaretColor.  This enables animation, styling, binding, etc...
+        public static readonly DependencyProperty CaretColorProperty =
+            DependencyProperty.Register("CaretColor", typeof(Color), typeof(PasswordBox), new PropertyMetadata(Colors.White));
+        #endregion
         #endregion
         #region Label properties
         #region Label

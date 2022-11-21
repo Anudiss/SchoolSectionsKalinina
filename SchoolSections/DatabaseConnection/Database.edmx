@@ -21,6 +21,13 @@
           <Property Name="Attendance_id" Type="int" Nullable="false" />
           <Property Name="Student_id" Type="int" Nullable="false" />
         </EntityType>
+        <EntityType Name="Cabinet">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Number" Type="decimal" Precision="4" Scale="0" Nullable="false" />
+        </EntityType>
         <EntityType Name="Class">
           <Key>
             <PropertyRef Name="ClassNumber" />
@@ -33,7 +40,7 @@
           <Key>
             <PropertyRef Name="Id_dayOfWeek" />
           </Key>
-          <Property Name="Id_dayOfWeek" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Id_dayOfWeek" Type="int" Nullable="false" />
           <Property Name="Name" Type="varchar" MaxLength="50" Nullable="false" />
         </EntityType>
         <EntityType Name="Image">
@@ -51,6 +58,7 @@
           <Property Name="Id_manager" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
           <Property Name="Section_id" Type="int" Nullable="false" />
           <Property Name="Teacher_id" Type="int" Nullable="false" />
+          <Property Name="IsDeleted" Type="bit" />
         </EntityType>
         <EntityType Name="Role">
           <Key>
@@ -66,6 +74,9 @@
           <Property Name="Id_section" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
           <Property Name="Name" Type="varchar" MaxLength="50" Nullable="false" />
           <Property Name="Capacity" Type="decimal" Precision="2" Scale="0" Nullable="false" />
+          <Property Name="Duration" Type="time" Precision="0" />
+          <Property Name="Cabinet_id" Type="int" />
+          <Property Name="IsDeleted" Type="bit" />
         </EntityType>
         <EntityType Name="SectionImage">
           <Key>
@@ -84,6 +95,7 @@
           <Property Name="Partonymic" Type="varchar" MaxLength="50" Nullable="false" />
           <Property Name="ClassNumber" Type="int" />
           <Property Name="ClassPrefix" Type="nvarchar" MaxLength="1" />
+          <Property Name="IsDeleted" Type="bit" />
         </EntityType>
         <EntityType Name="Student_manager">
           <Key>
@@ -92,6 +104,7 @@
           <Property Name="Id_student_section" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
           <Property Name="Student_id" Type="int" Nullable="false" />
           <Property Name="Manager_id" Type="int" Nullable="false" />
+          <Property Name="IsDeleted" Type="bit" />
         </EntityType>
         <EntityType Name="sysdiagrams">
           <Key>
@@ -112,6 +125,14 @@
           <Property Name="Name" Type="varchar" MaxLength="50" Nullable="false" />
           <Property Name="Patronymic" Type="varchar" MaxLength="50" Nullable="false" />
           <Property Name="User_ID" Type="int" />
+          <Property Name="IsDeleted" Type="bit" />
+        </EntityType>
+        <EntityType Name="TeacherImage">
+          <Key>
+            <PropertyRef Name="Teacher_id" />
+          </Key>
+          <Property Name="Teacher_id" Type="int" Nullable="false" />
+          <Property Name="Image_Data" Type="image" />
         </EntityType>
         <EntityType Name="Timetable">
           <Key>
@@ -119,9 +140,9 @@
           </Key>
           <Property Name="Id_timetable" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
           <Property Name="Manager_id" Type="int" Nullable="false" />
-          <Property Name="DayOfWeek_id" Type="int" Nullable="false" />
-          <Property Name="Time" Type="time" Precision="6" Nullable="false" />
-          <Property Name="CabinetNumber" Type="decimal" Precision="4" Scale="0" Nullable="false" />
+          <Property Name="DayOfWeek_id" Type="int" />
+          <Property Name="Time" Type="time" Precision="0" />
+          <Property Name="IsDeleted" Type="bit" />
         </EntityType>
         <EntityType Name="User">
           <Key>
@@ -131,6 +152,15 @@
           <Property Name="Login" Type="varchar" MaxLength="50" Nullable="false" />
           <Property Name="Password" Type="varchar" MaxLength="50" />
           <Property Name="Role_ID" Type="int" />
+        </EntityType>
+        <EntityType Name="Worktime">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="DayOfWeek_id" Type="int" />
+          <Property Name="StartTime" Type="time" Precision="0" Nullable="false" />
+          <Property Name="EndTime" Type="time" Precision="0" Nullable="false" />
         </EntityType>
         <Association Name="FK_Attendance_students_Attendance">
           <End Role="Attendance" Type="Self.Attendance" Multiplicity="1" />
@@ -189,6 +219,18 @@
             </Principal>
             <Dependent Role="Manager">
               <PropertyRef Name="Teacher_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Section_Cabinet">
+          <End Role="Cabinet" Type="Self.Cabinet" Multiplicity="0..1" />
+          <End Role="Section" Type="Self.Section" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Cabinet">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="Section">
+              <PropertyRef Name="Cabinet_id" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
@@ -254,8 +296,20 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <Association Name="FK_TeacherImage_Teacher">
+          <End Role="Teacher" Type="Self.Teacher" Multiplicity="1" />
+          <End Role="TeacherImage" Type="Self.TeacherImage" Multiplicity="0..1" />
+          <ReferentialConstraint>
+            <Principal Role="Teacher">
+              <PropertyRef Name="Id_teacher" />
+            </Principal>
+            <Dependent Role="TeacherImage">
+              <PropertyRef Name="Teacher_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
         <Association Name="FK_Timetable_DayOfWeek">
-          <End Role="DayOfWeek" Type="Self.DayOfWeek" Multiplicity="1" />
+          <End Role="DayOfWeek" Type="Self.DayOfWeek" Multiplicity="0..1" />
           <End Role="Timetable" Type="Self.Timetable" Multiplicity="*" />
           <ReferentialConstraint>
             <Principal Role="DayOfWeek">
@@ -290,9 +344,22 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <Association Name="FK_Worktime_DayOfWeek">
+          <End Role="DayOfWeek" Type="Self.DayOfWeek" Multiplicity="0..1" />
+          <End Role="Worktime" Type="Self.Worktime" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="DayOfWeek">
+              <PropertyRef Name="Id_dayOfWeek" />
+            </Principal>
+            <Dependent Role="Worktime">
+              <PropertyRef Name="DayOfWeek_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
         <EntityContainer Name="Хранилище SchoolModelContainer">
           <EntitySet Name="Attendance" EntityType="Self.Attendance" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Attendance_students" EntityType="Self.Attendance_students" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Cabinet" EntityType="Self.Cabinet" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Class" EntityType="Self.Class" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="DayOfWeek" EntityType="Self.DayOfWeek" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Image" EntityType="Self.Image" Schema="dbo" store:Type="Tables" />
@@ -304,8 +371,10 @@
           <EntitySet Name="Student_manager" EntityType="Self.Student_manager" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="sysdiagrams" EntityType="Self.sysdiagrams" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Teacher" EntityType="Self.Teacher" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="TeacherImage" EntityType="Self.TeacherImage" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Timetable" EntityType="Self.Timetable" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="User" EntityType="Self.User" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Worktime" EntityType="Self.Worktime" Schema="dbo" store:Type="Tables" />
           <AssociationSet Name="FK_Attendance_students_Attendance" Association="Self.FK_Attendance_students_Attendance">
             <End Role="Attendance" EntitySet="Attendance" />
             <End Role="Attendance_students" EntitySet="Attendance_students" />
@@ -325,6 +394,10 @@
           <AssociationSet Name="FK_Manager_Teacher" Association="Self.FK_Manager_Teacher">
             <End Role="Teacher" EntitySet="Teacher" />
             <End Role="Manager" EntitySet="Manager" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Section_Cabinet" Association="Self.FK_Section_Cabinet">
+            <End Role="Cabinet" EntitySet="Cabinet" />
+            <End Role="Section" EntitySet="Section" />
           </AssociationSet>
           <AssociationSet Name="FK_SectionImage_Section" Association="Self.FK_SectionImage_Section">
             <End Role="Section" EntitySet="Section" />
@@ -346,6 +419,10 @@
             <End Role="User" EntitySet="User" />
             <End Role="Teacher" EntitySet="Teacher" />
           </AssociationSet>
+          <AssociationSet Name="FK_TeacherImage_Teacher" Association="Self.FK_TeacherImage_Teacher">
+            <End Role="Teacher" EntitySet="Teacher" />
+            <End Role="TeacherImage" EntitySet="TeacherImage" />
+          </AssociationSet>
           <AssociationSet Name="FK_Timetable_DayOfWeek" Association="Self.FK_Timetable_DayOfWeek">
             <End Role="DayOfWeek" EntitySet="DayOfWeek" />
             <End Role="Timetable" EntitySet="Timetable" />
@@ -358,6 +435,10 @@
             <End Role="Role" EntitySet="Role" />
             <End Role="User" EntitySet="User" />
           </AssociationSet>
+          <AssociationSet Name="FK_Worktime_DayOfWeek" Association="Self.FK_Worktime_DayOfWeek">
+            <End Role="DayOfWeek" EntitySet="DayOfWeek" />
+            <End Role="Worktime" EntitySet="Worktime" />
+          </AssociationSet>
         </EntityContainer>
       </Schema></edmx:StorageModels>
     <!-- CSDL content -->
@@ -366,6 +447,7 @@
         <EntityContainer Name="SchoolEntities" annotation:LazyLoadingEnabled="true">
           <EntitySet Name="Attendance" EntityType="SchoolModel.Attendance" />
           <EntitySet Name="Attendance_students" EntityType="SchoolModel.Attendance_students" />
+          <EntitySet Name="Cabinet" EntityType="SchoolModel.Cabinet" />
           <EntitySet Name="Class" EntityType="SchoolModel.Class" />
           <EntitySet Name="DayOfWeek" EntityType="SchoolModel.DayOfWeek" />
           <EntitySet Name="Image" EntityType="SchoolModel.Image" />
@@ -377,8 +459,10 @@
           <EntitySet Name="Student_manager" EntityType="SchoolModel.Student_manager" />
           <EntitySet Name="sysdiagrams" EntityType="SchoolModel.sysdiagrams" />
           <EntitySet Name="Teacher" EntityType="SchoolModel.Teacher" />
+          <EntitySet Name="TeacherImage" EntityType="SchoolModel.TeacherImage" />
           <EntitySet Name="Timetable" EntityType="SchoolModel.Timetable" />
           <EntitySet Name="User" EntityType="SchoolModel.User" />
+          <EntitySet Name="Worktime" EntityType="SchoolModel.Worktime" />
           <AssociationSet Name="FK_Attendance_students_Attendance" Association="SchoolModel.FK_Attendance_students_Attendance">
             <End Role="Attendance" EntitySet="Attendance" />
             <End Role="Attendance_students" EntitySet="Attendance_students" />
@@ -391,6 +475,10 @@
             <End Role="Student" EntitySet="Student" />
             <End Role="Attendance_students" EntitySet="Attendance_students" />
           </AssociationSet>
+          <AssociationSet Name="FK_Section_Cabinet" Association="SchoolModel.FK_Section_Cabinet">
+            <End Role="Cabinet" EntitySet="Cabinet" />
+            <End Role="Section" EntitySet="Section" />
+          </AssociationSet>
           <AssociationSet Name="FK_Student_Class" Association="SchoolModel.FK_Student_Class">
             <End Role="Class" EntitySet="Class" />
             <End Role="Student" EntitySet="Student" />
@@ -398,6 +486,10 @@
           <AssociationSet Name="FK_Timetable_DayOfWeek" Association="SchoolModel.FK_Timetable_DayOfWeek">
             <End Role="DayOfWeek" EntitySet="DayOfWeek" />
             <End Role="Timetable" EntitySet="Timetable" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Worktime_DayOfWeek" Association="SchoolModel.FK_Worktime_DayOfWeek">
+            <End Role="DayOfWeek" EntitySet="DayOfWeek" />
+            <End Role="Worktime" EntitySet="Worktime" />
           </AssociationSet>
           <AssociationSet Name="FK_Manager_Section" Association="SchoolModel.FK_Manager_Section">
             <End Role="Section" EntitySet="Section" />
@@ -431,6 +523,10 @@
             <End Role="User" EntitySet="User" />
             <End Role="Teacher" EntitySet="Teacher" />
           </AssociationSet>
+          <AssociationSet Name="FK_TeacherImage_Teacher" Association="SchoolModel.FK_TeacherImage_Teacher">
+            <End Role="Teacher" EntitySet="Teacher" />
+            <End Role="TeacherImage" EntitySet="TeacherImage" />
+          </AssociationSet>
         </EntityContainer>
         <EntityType Name="Attendance">
           <Key>
@@ -452,6 +548,14 @@
           <NavigationProperty Name="Attendance" Relationship="SchoolModel.FK_Attendance_students_Attendance" FromRole="Attendance_students" ToRole="Attendance" />
           <NavigationProperty Name="Student" Relationship="SchoolModel.FK_Attendance_students_Student" FromRole="Attendance_students" ToRole="Student" />
         </EntityType>
+        <EntityType Name="Cabinet">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Number" Type="Decimal" Nullable="false" Precision="4" Scale="0" />
+          <NavigationProperty Name="Section" Relationship="SchoolModel.FK_Section_Cabinet" FromRole="Cabinet" ToRole="Section" />
+        </EntityType>
         <EntityType Name="Class">
           <Key>
             <PropertyRef Name="ClassNumber" />
@@ -465,9 +569,10 @@
           <Key>
             <PropertyRef Name="Id_dayOfWeek" />
           </Key>
-          <Property Name="Id_dayOfWeek" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Id_dayOfWeek" Type="Int32" Nullable="false" />
           <Property Name="Name" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
           <NavigationProperty Name="Timetable" Relationship="SchoolModel.FK_Timetable_DayOfWeek" FromRole="DayOfWeek" ToRole="Timetable" />
+          <NavigationProperty Name="Worktime" Relationship="SchoolModel.FK_Worktime_DayOfWeek" FromRole="DayOfWeek" ToRole="Worktime" />
         </EntityType>
         <EntityType Name="Image">
           <Key>
@@ -484,6 +589,7 @@
           <Property Name="Id_manager" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
           <Property Name="Section_id" Type="Int32" Nullable="false" />
           <Property Name="Teacher_id" Type="Int32" Nullable="false" />
+          <Property Name="IsDeleted" Type="Boolean" />
           <NavigationProperty Name="Section" Relationship="SchoolModel.FK_Manager_Section" FromRole="Manager" ToRole="Section" />
           <NavigationProperty Name="Teacher" Relationship="SchoolModel.FK_Manager_Teacher" FromRole="Manager" ToRole="Teacher" />
           <NavigationProperty Name="Student_manager" Relationship="SchoolModel.FK_Student_manager_Manager" FromRole="Manager" ToRole="Student_manager" />
@@ -504,6 +610,10 @@
           <Property Name="Id_section" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
           <Property Name="Name" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
           <Property Name="Capacity" Type="Decimal" Nullable="false" Precision="2" Scale="0" />
+          <Property Name="Duration" Type="Time" Precision="0" />
+          <Property Name="Cabinet_id" Type="Int32" />
+          <Property Name="IsDeleted" Type="Boolean" />
+          <NavigationProperty Name="Cabinet" Relationship="SchoolModel.FK_Section_Cabinet" FromRole="Section" ToRole="Cabinet" />
           <NavigationProperty Name="Manager" Relationship="SchoolModel.FK_Manager_Section" FromRole="Section" ToRole="Manager" />
           <NavigationProperty Name="SectionImage" Relationship="SchoolModel.FK_SectionImage_Section" FromRole="Section" ToRole="SectionImage" />
         </EntityType>
@@ -525,6 +635,7 @@
           <Property Name="Partonymic" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
           <Property Name="ClassNumber" Type="Int32" />
           <Property Name="ClassPrefix" Type="String" MaxLength="1" FixedLength="false" Unicode="true" />
+          <Property Name="IsDeleted" Type="Boolean" />
           <NavigationProperty Name="Attendance_students" Relationship="SchoolModel.FK_Attendance_students_Student" FromRole="Student" ToRole="Attendance_students" />
           <NavigationProperty Name="Class" Relationship="SchoolModel.FK_Student_Class" FromRole="Student" ToRole="Class" />
           <NavigationProperty Name="Student_manager" Relationship="SchoolModel.FK_Student_manager_Student" FromRole="Student" ToRole="Student_manager" />
@@ -536,6 +647,7 @@
           <Property Name="Id_student_section" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
           <Property Name="Student_id" Type="Int32" Nullable="false" />
           <Property Name="Manager_id" Type="Int32" Nullable="false" />
+          <Property Name="IsDeleted" Type="Boolean" />
           <NavigationProperty Name="Manager" Relationship="SchoolModel.FK_Student_manager_Manager" FromRole="Student_manager" ToRole="Manager" />
           <NavigationProperty Name="Student" Relationship="SchoolModel.FK_Student_manager_Student" FromRole="Student_manager" ToRole="Student" />
         </EntityType>
@@ -558,8 +670,18 @@
           <Property Name="Name" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
           <Property Name="Patronymic" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
           <Property Name="User_ID" Type="Int32" />
+          <Property Name="IsDeleted" Type="Boolean" />
           <NavigationProperty Name="Manager" Relationship="SchoolModel.FK_Manager_Teacher" FromRole="Teacher" ToRole="Manager" />
           <NavigationProperty Name="User" Relationship="SchoolModel.FK_Teacher_User" FromRole="Teacher" ToRole="User" />
+          <NavigationProperty Name="TeacherImage" Relationship="SchoolModel.FK_TeacherImage_Teacher" FromRole="Teacher" ToRole="TeacherImage" />
+        </EntityType>
+        <EntityType Name="TeacherImage">
+          <Key>
+            <PropertyRef Name="Teacher_id" />
+          </Key>
+          <Property Name="Teacher_id" Type="Int32" Nullable="false" />
+          <Property Name="Image_Data" Type="Binary" MaxLength="Max" FixedLength="false" />
+          <NavigationProperty Name="Teacher" Relationship="SchoolModel.FK_TeacherImage_Teacher" FromRole="TeacherImage" ToRole="Teacher" />
         </EntityType>
         <EntityType Name="Timetable">
           <Key>
@@ -567,9 +689,9 @@
           </Key>
           <Property Name="Id_timetable" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
           <Property Name="Manager_id" Type="Int32" Nullable="false" />
-          <Property Name="DayOfWeek_id" Type="Int32" Nullable="false" />
-          <Property Name="Time" Type="Time" Nullable="false" Precision="6" />
-          <Property Name="CabinetNumber" Type="Decimal" Nullable="false" Precision="4" Scale="0" />
+          <Property Name="DayOfWeek_id" Type="Int32" />
+          <Property Name="Time" Type="Time" Precision="0" />
+          <Property Name="IsDeleted" Type="Boolean" />
           <NavigationProperty Name="Attendance" Relationship="SchoolModel.FK_Attendance_Timetable" FromRole="Timetable" ToRole="Attendance" />
           <NavigationProperty Name="DayOfWeek" Relationship="SchoolModel.FK_Timetable_DayOfWeek" FromRole="Timetable" ToRole="DayOfWeek" />
           <NavigationProperty Name="Manager" Relationship="SchoolModel.FK_Timetable_Manager" FromRole="Timetable" ToRole="Manager" />
@@ -584,6 +706,16 @@
           <Property Name="Role_ID" Type="Int32" />
           <NavigationProperty Name="Role" Relationship="SchoolModel.FK_User_Role" FromRole="User" ToRole="Role" />
           <NavigationProperty Name="Teacher" Relationship="SchoolModel.FK_Teacher_User" FromRole="User" ToRole="Teacher" />
+        </EntityType>
+        <EntityType Name="Worktime">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="DayOfWeek_id" Type="Int32" />
+          <Property Name="StartTime" Type="Time" Nullable="false" Precision="0" />
+          <Property Name="EndTime" Type="Time" Nullable="false" Precision="0" />
+          <NavigationProperty Name="DayOfWeek" Relationship="SchoolModel.FK_Worktime_DayOfWeek" FromRole="Worktime" ToRole="DayOfWeek" />
         </EntityType>
         <Association Name="FK_Attendance_students_Attendance">
           <End Type="SchoolModel.Attendance" Role="Attendance" Multiplicity="1" />
@@ -621,6 +753,18 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <Association Name="FK_Section_Cabinet">
+          <End Type="SchoolModel.Cabinet" Role="Cabinet" Multiplicity="0..1" />
+          <End Type="SchoolModel.Section" Role="Section" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Cabinet">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="Section">
+              <PropertyRef Name="Cabinet_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
         <Association Name="FK_Student_Class">
           <End Type="SchoolModel.Class" Role="Class" Multiplicity="0..1" />
           <End Type="SchoolModel.Student" Role="Student" Multiplicity="*" />
@@ -636,13 +780,25 @@
           </ReferentialConstraint>
         </Association>
         <Association Name="FK_Timetable_DayOfWeek">
-          <End Type="SchoolModel.DayOfWeek" Role="DayOfWeek" Multiplicity="1" />
+          <End Type="SchoolModel.DayOfWeek" Role="DayOfWeek" Multiplicity="0..1" />
           <End Type="SchoolModel.Timetable" Role="Timetable" Multiplicity="*" />
           <ReferentialConstraint>
             <Principal Role="DayOfWeek">
               <PropertyRef Name="Id_dayOfWeek" />
             </Principal>
             <Dependent Role="Timetable">
+              <PropertyRef Name="DayOfWeek_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Worktime_DayOfWeek">
+          <End Type="SchoolModel.DayOfWeek" Role="DayOfWeek" Multiplicity="0..1" />
+          <End Type="SchoolModel.Worktime" Role="Worktime" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="DayOfWeek">
+              <PropertyRef Name="Id_dayOfWeek" />
+            </Principal>
+            <Dependent Role="Worktime">
               <PropertyRef Name="DayOfWeek_id" />
             </Dependent>
           </ReferentialConstraint>
@@ -743,6 +899,18 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <Association Name="FK_TeacherImage_Teacher">
+          <End Type="SchoolModel.Teacher" Role="Teacher" Multiplicity="1" />
+          <End Type="SchoolModel.TeacherImage" Role="TeacherImage" Multiplicity="0..1" />
+          <ReferentialConstraint>
+            <Principal Role="Teacher">
+              <PropertyRef Name="Id_teacher" />
+            </Principal>
+            <Dependent Role="TeacherImage">
+              <PropertyRef Name="Teacher_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
         </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
@@ -764,6 +932,14 @@
                 <ScalarProperty Name="Student_id" ColumnName="Student_id" />
                 <ScalarProperty Name="Attendance_id" ColumnName="Attendance_id" />
                 <ScalarProperty Name="Id_attendance_students" ColumnName="Id_attendance_students" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Cabinet">
+            <EntityTypeMapping TypeName="SchoolModel.Cabinet">
+              <MappingFragment StoreEntitySet="Cabinet">
+                <ScalarProperty Name="Number" ColumnName="Number" />
+                <ScalarProperty Name="ID" ColumnName="ID" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
@@ -795,6 +971,7 @@
           <EntitySetMapping Name="Manager">
             <EntityTypeMapping TypeName="SchoolModel.Manager">
               <MappingFragment StoreEntitySet="Manager">
+                <ScalarProperty Name="IsDeleted" ColumnName="IsDeleted" />
                 <ScalarProperty Name="Teacher_id" ColumnName="Teacher_id" />
                 <ScalarProperty Name="Section_id" ColumnName="Section_id" />
                 <ScalarProperty Name="Id_manager" ColumnName="Id_manager" />
@@ -812,6 +989,9 @@
           <EntitySetMapping Name="Section">
             <EntityTypeMapping TypeName="SchoolModel.Section">
               <MappingFragment StoreEntitySet="Section">
+                <ScalarProperty Name="IsDeleted" ColumnName="IsDeleted" />
+                <ScalarProperty Name="Cabinet_id" ColumnName="Cabinet_id" />
+                <ScalarProperty Name="Duration" ColumnName="Duration" />
                 <ScalarProperty Name="Capacity" ColumnName="Capacity" />
                 <ScalarProperty Name="Name" ColumnName="Name" />
                 <ScalarProperty Name="Id_section" ColumnName="Id_section" />
@@ -829,6 +1009,7 @@
           <EntitySetMapping Name="Student">
             <EntityTypeMapping TypeName="SchoolModel.Student">
               <MappingFragment StoreEntitySet="Student">
+                <ScalarProperty Name="IsDeleted" ColumnName="IsDeleted" />
                 <ScalarProperty Name="ClassPrefix" ColumnName="ClassPrefix" />
                 <ScalarProperty Name="ClassNumber" ColumnName="ClassNumber" />
                 <ScalarProperty Name="Partonymic" ColumnName="Partonymic" />
@@ -841,6 +1022,7 @@
           <EntitySetMapping Name="Student_manager">
             <EntityTypeMapping TypeName="SchoolModel.Student_manager">
               <MappingFragment StoreEntitySet="Student_manager">
+                <ScalarProperty Name="IsDeleted" ColumnName="IsDeleted" />
                 <ScalarProperty Name="Manager_id" ColumnName="Manager_id" />
                 <ScalarProperty Name="Student_id" ColumnName="Student_id" />
                 <ScalarProperty Name="Id_student_section" ColumnName="Id_student_section" />
@@ -861,6 +1043,7 @@
           <EntitySetMapping Name="Teacher">
             <EntityTypeMapping TypeName="SchoolModel.Teacher">
               <MappingFragment StoreEntitySet="Teacher">
+                <ScalarProperty Name="IsDeleted" ColumnName="IsDeleted" />
                 <ScalarProperty Name="User_ID" ColumnName="User_ID" />
                 <ScalarProperty Name="Patronymic" ColumnName="Patronymic" />
                 <ScalarProperty Name="Name" ColumnName="Name" />
@@ -869,10 +1052,18 @@
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
+          <EntitySetMapping Name="TeacherImage">
+            <EntityTypeMapping TypeName="SchoolModel.TeacherImage">
+              <MappingFragment StoreEntitySet="TeacherImage">
+                <ScalarProperty Name="Image_Data" ColumnName="Image_Data" />
+                <ScalarProperty Name="Teacher_id" ColumnName="Teacher_id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
           <EntitySetMapping Name="Timetable">
             <EntityTypeMapping TypeName="SchoolModel.Timetable">
               <MappingFragment StoreEntitySet="Timetable">
-                <ScalarProperty Name="CabinetNumber" ColumnName="CabinetNumber" />
+                <ScalarProperty Name="IsDeleted" ColumnName="IsDeleted" />
                 <ScalarProperty Name="Time" ColumnName="Time" />
                 <ScalarProperty Name="DayOfWeek_id" ColumnName="DayOfWeek_id" />
                 <ScalarProperty Name="Manager_id" ColumnName="Manager_id" />
@@ -886,6 +1077,16 @@
                 <ScalarProperty Name="Role_ID" ColumnName="Role_ID" />
                 <ScalarProperty Name="Password" ColumnName="Password" />
                 <ScalarProperty Name="Login" ColumnName="Login" />
+                <ScalarProperty Name="ID" ColumnName="ID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Worktime">
+            <EntityTypeMapping TypeName="SchoolModel.Worktime">
+              <MappingFragment StoreEntitySet="Worktime">
+                <ScalarProperty Name="EndTime" ColumnName="EndTime" />
+                <ScalarProperty Name="StartTime" ColumnName="StartTime" />
+                <ScalarProperty Name="DayOfWeek_id" ColumnName="DayOfWeek_id" />
                 <ScalarProperty Name="ID" ColumnName="ID" />
               </MappingFragment>
             </EntityTypeMapping>

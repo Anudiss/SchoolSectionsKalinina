@@ -1,6 +1,8 @@
 ﻿using SchoolSections.DatabaseConnection;
 using SchoolSections.Permissions;
 using SchoolSections.Windows.MainWindow.Pages;
+using SchoolSections.Windows.MainWindow.Pages.SectionResources;
+using SchoolSections.Windows.MainWindow.Pages.TeacherResources;
 using System;
 using System.Globalization;
 using System.Linq;
@@ -25,6 +27,14 @@ namespace SchoolSections.Windows.MainWindow
         {
             new AuthWindow.AuthWindow().Show();
             Close();
+        }
+
+        private void OnSectionClick(object sender, RoutedEventArgs e) =>
+            PageContainer.Navigate(new SectionPage());
+
+        private void OnTeacherClick(object sender, RoutedEventArgs e)
+        {
+            PageContainer.Navigate(new TeacherPage());
         }
     }
 }

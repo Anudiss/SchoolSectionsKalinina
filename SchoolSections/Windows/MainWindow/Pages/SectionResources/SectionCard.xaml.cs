@@ -2,7 +2,7 @@
 using System.Windows;
 using System.Windows.Controls;
 
-namespace SchoolSections.Windows.MainWindow.Pages
+namespace SchoolSections.Windows.MainWindow.Pages.SectionResources
 {
     public delegate void ButtonClickHandler(Section section);
 

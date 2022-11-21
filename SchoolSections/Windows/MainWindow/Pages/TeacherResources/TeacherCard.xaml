@@ -1,0 +1,33 @@
+﻿<UserControl x:Class="SchoolSections.Windows.MainWindow.Pages.TeacherResources.TeacherCard"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:SchoolSections.Windows.MainWindow.Pages.TeacherResources"
+             mc:Ignorable="d"
+             Name="TeacherCardRoot">
+
+    <UserControl.Resources>
+        <Style TargetType="{x:Type Button}" BasedOn="{StaticResource Button}">
+            <Setter Property="Padding" Value="12 7"/>
+            <Setter Property="Margin" Value="10 5"/>
+        </Style>
+    </UserControl.Resources>
+    
+    <StackPanel Orientation="Horizontal"
+                Margin="10 5">
+        <Image Source="{Binding ElementName=TeacherCardRoot, Path=Teacher.Image}"
+               Margin="5"
+               Width="100" Height="100"/>
+        <StackPanel Orientation="Vertical"
+                    Margin="10 0 0 0"
+                    VerticalAlignment="Center">
+            <TextBlock Text="{Binding ElementName=TeacherCardRoot, Path=Teacher, Converter={StaticResource FIOConverter}}"
+                       FontSize="20"/>
+            <StackPanel Orientation="Horizontal">
+                <Button Content="Редактировать" Click="OnEditClick"/>
+                <Button Content="Удалить" Click="OnRemoveClick"/>
+            </StackPanel>
+        </StackPanel>
+    </StackPanel>
+</UserControl>

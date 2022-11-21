@@ -47,6 +47,7 @@
     <Reference Include="System" />
     <Reference Include="System.ComponentModel.DataAnnotations" />
     <Reference Include="System.Data" />
+    <Reference Include="System.Drawing" />
     <Reference Include="System.Runtime.Serialization" />
     <Reference Include="System.Security" />
     <Reference Include="System.Xml" />
@@ -72,9 +73,14 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="Components\Converters\Converters.cs" />
+    <Compile Include="Components\PartialClasses\DayOfWeek.cs" />
+    <Compile Include="Components\PartialClasses\Extensions.cs" />
     <Compile Include="Components\PartialClasses\Image.cs" />
+    <Compile Include="Components\PartialClasses\Section.cs" />
     <Compile Include="Components\PartialClasses\SectionImage.cs" />
+    <Compile Include="Components\PartialClasses\Teacher.cs" />
     <Compile Include="Components\PartialClasses\User.cs" />
+    <Compile Include="Components\PartialClasses\Worktime.cs" />
     <Compile Include="Components\UserControls\InputField.xaml.cs">
       <DependentUpon>InputField.xaml</DependentUpon>
     </Compile>
@@ -85,6 +91,9 @@
       <DependentUpon>Database.tt</DependentUpon>
     </Compile>
     <Compile Include="DatabaseConnection\Attendance_students.cs">
+      <DependentUpon>Database.tt</DependentUpon>
+    </Compile>
+    <Compile Include="DatabaseConnection\Cabinet.cs">
       <DependentUpon>Database.tt</DependentUpon>
     </Compile>
     <Compile Include="DatabaseConnection\Class.cs">
@@ -136,10 +145,16 @@
     <Compile Include="DatabaseConnection\Teacher.cs">
       <DependentUpon>Database.tt</DependentUpon>
     </Compile>
+    <Compile Include="DatabaseConnection\TeacherImage.cs">
+      <DependentUpon>Database.tt</DependentUpon>
+    </Compile>
     <Compile Include="DatabaseConnection\Timetable.cs">
       <DependentUpon>Database.tt</DependentUpon>
     </Compile>
     <Compile Include="DatabaseConnection\User.cs">
+      <DependentUpon>Database.tt</DependentUpon>
+    </Compile>
+    <Compile Include="DatabaseConnection\Worktime.cs">
       <DependentUpon>Database.tt</DependentUpon>
     </Compile>
     <Compile Include="Permissions\Permissions.cs" />
@@ -150,11 +165,29 @@
     <Compile Include="Windows\MainWindow\MainWindow.xaml.cs">
       <DependentUpon>MainWindow.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Windows\MainWindow\Pages\SectionCard.xaml.cs">
+    <Compile Include="Windows\MainWindow\Pages\GroupResources\GroupPage.xaml.cs">
+      <DependentUpon>GroupPage.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Windows\MainWindow\Pages\SectionResources\ManagerCard.xaml.cs">
+      <DependentUpon>ManagerCard.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Windows\MainWindow\Pages\SectionResources\SectionCard.xaml.cs">
       <DependentUpon>SectionCard.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Windows\MainWindow\Pages\SectionPage.xaml.cs">
+    <Compile Include="Windows\MainWindow\Pages\SectionResources\SectionEditWindow.xaml.cs">
+      <DependentUpon>SectionEditWindow.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Windows\MainWindow\Pages\SectionResources\SectionPage.xaml.cs">
       <DependentUpon>SectionPage.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Windows\MainWindow\Pages\TeacherResources\TeacherCard.xaml.cs">
+      <DependentUpon>TeacherCard.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Windows\MainWindow\Pages\TeacherResources\TeacherEditWindow.xaml.cs">
+      <DependentUpon>TeacherEditWindow.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Windows\MainWindow\Pages\TeacherResources\TeacherPage.xaml.cs">
+      <DependentUpon>TeacherPage.xaml</DependentUpon>
     </Compile>
   </ItemGroup>
   <ItemGroup>
@@ -224,11 +257,35 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Windows\MainWindow\Pages\SectionCard.xaml">
+    <Page Include="Windows\MainWindow\Pages\GroupResources\GroupPage.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Windows\MainWindow\Pages\SectionPage.xaml">
+    <Page Include="Windows\MainWindow\Pages\SectionResources\ManagerCard.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Windows\MainWindow\Pages\SectionResources\SectionCard.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Windows\MainWindow\Pages\SectionResources\SectionEditWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Windows\MainWindow\Pages\SectionResources\SectionPage.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Windows\MainWindow\Pages\TeacherResources\TeacherCard.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Windows\MainWindow\Pages\TeacherResources\TeacherEditWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Windows\MainWindow\Pages\TeacherResources\TeacherPage.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
