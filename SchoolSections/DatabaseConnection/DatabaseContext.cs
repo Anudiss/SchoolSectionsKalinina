@@ -16,6 +16,7 @@ namespace SchoolSections.DatabaseConnection
             Entities.Section.Load();
             Entities.Teacher.Load();
             Entities.DayOfWeek.Load();
+            Entities.Manager.Load();
         }
     }
 }

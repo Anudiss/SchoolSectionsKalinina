@@ -76,6 +76,7 @@
     <Compile Include="Components\PartialClasses\DayOfWeek.cs" />
     <Compile Include="Components\PartialClasses\Extensions.cs" />
     <Compile Include="Components\PartialClasses\Image.cs" />
+    <Compile Include="Components\PartialClasses\Manager.cs" />
     <Compile Include="Components\PartialClasses\Section.cs" />
     <Compile Include="Components\PartialClasses\SectionImage.cs" />
     <Compile Include="Components\PartialClasses\Teacher.cs" />
@@ -164,6 +165,9 @@
     </Compile>
     <Compile Include="Windows\MainWindow\MainWindow.xaml.cs">
       <DependentUpon>MainWindow.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Windows\MainWindow\Pages\GroupResources\GroupCard.xaml.cs">
+      <DependentUpon>GroupCard.xaml</DependentUpon>
     </Compile>
     <Compile Include="Windows\MainWindow\Pages\GroupResources\GroupPage.xaml.cs">
       <DependentUpon>GroupPage.xaml</DependentUpon>
@@ -254,6 +258,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Windows\MainWindow\MainWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Windows\MainWindow\Pages\GroupResources\GroupCard.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

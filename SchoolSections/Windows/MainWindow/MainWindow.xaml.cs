@@ -1,6 +1,7 @@
 ﻿using SchoolSections.DatabaseConnection;
 using SchoolSections.Permissions;
 using SchoolSections.Windows.MainWindow.Pages;
+using SchoolSections.Windows.MainWindow.Pages.GroupResources;
 using SchoolSections.Windows.MainWindow.Pages.SectionResources;
 using SchoolSections.Windows.MainWindow.Pages.TeacherResources;
 using System;
@@ -32,9 +33,10 @@ namespace SchoolSections.Windows.MainWindow
         private void OnSectionClick(object sender, RoutedEventArgs e) =>
             PageContainer.Navigate(new SectionPage());
 
-        private void OnTeacherClick(object sender, RoutedEventArgs e)
-        {
+        private void OnTeacherClick(object sender, RoutedEventArgs e) =>
             PageContainer.Navigate(new TeacherPage());
-        }
+
+        private void OnGroupsClick(object sender, RoutedEventArgs e) =>
+            PageContainer.Navigate(new GroupPage());
     }
 }

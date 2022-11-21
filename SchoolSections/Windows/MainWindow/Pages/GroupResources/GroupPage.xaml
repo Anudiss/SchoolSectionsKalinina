@@ -1,13 +1,30 @@
 ﻿<Page x:Class="SchoolSections.Windows.MainWindow.Pages.GroupResources.GroupPage"
-        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:local="clr-namespace:SchoolSections.Windows.MainWindow.Pages.GroupResources"
-        mc:Ignorable="d"
-        Title="GroupPage" Height="450" Width="800"
-        Background="{StaticResource DarkBlueBackground}">
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+      xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+      xmlns:local="clr-namespace:SchoolSections.Windows.MainWindow.Pages.GroupResources"
+      xmlns:database="clr-namespace:SchoolSections.DatabaseConnection"
+      mc:Ignorable="d"
+      Title="GroupPage"
+      Background="{StaticResource DarkBlueBackground}"
+      Name="GroupPageRoot">
     <Grid>
-        
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+
+        <ListBox x:Name="ManagerContainer"
+                 Grid.Row="1"
+                 ItemsSource="{Binding ElementName=GroupPageRoot, Path=Managers}"
+                 ItemContainerStyle="{StaticResource ItemsContainerStyle}"
+                 Background="Transparent">
+            <ListBox.ItemTemplate>
+                <DataTemplate DataType="{x:Type database:Manager}">
+                    <local:GroupCard Manager="{Binding Path=.}"/>
+                </DataTemplate>
+            </ListBox.ItemTemplate>
+        </ListBox>
     </Grid>
 </Page>

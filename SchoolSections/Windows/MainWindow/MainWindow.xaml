@@ -39,6 +39,7 @@
                     Grid.Row="1" Grid.Column="0">
             <Button Content="Кружки" Click="OnSectionClick"/>
             <Button Content="Учителя" Click="OnTeacherClick"/>
+            <Button Content="Группы" Click="OnGroupsClick"/>
         </StackPanel>
 
         <Menu Background="Transparent"
