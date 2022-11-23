@@ -4,6 +4,7 @@
              xmlns:local="clr-namespace:SchoolSections"
              xmlns:permissions="clr-namespace:SchoolSections.Permissions"
              xmlns:database="clr-namespace:SchoolSections.DatabaseConnection"
+             xmlns:partial="clr-namespace:SchoolSections.Components.PartialClasses"
              xmlns:converters="clr-namespace:SchoolSections.Components.Converters"
              StartupUri="/Windows/AuthWindow/AuthWindow.xaml">
     <Application.Resources>
@@ -12,6 +13,7 @@
         <converters:FIOConverter x:Key="FIOConverter"/>
         <converters:TimetableByDayConverter x:Key="TimetableByDayConverter"/>
         <converters:SectionToTimetableConverter x:Key="SectionToTimetableConverter"/>
+        <converters:ExpectStudentConverter x:Key="ExpectStudentConverter"/>
 
         <permissions:PermissionToVisibilityConverter x:Key="PermissionToVisibilityConverter"/>
 

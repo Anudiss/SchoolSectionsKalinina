@@ -3,6 +3,7 @@ using SchoolSections.Permissions;
 using SchoolSections.Windows.MainWindow.Pages;
 using SchoolSections.Windows.MainWindow.Pages.GroupResources;
 using SchoolSections.Windows.MainWindow.Pages.SectionResources;
+using SchoolSections.Windows.MainWindow.Pages.TeacherPageResources;
 using SchoolSections.Windows.MainWindow.Pages.TeacherResources;
 using System;
 using System.Globalization;
@@ -38,5 +39,8 @@ namespace SchoolSections.Windows.MainWindow
 
         private void OnGroupsClick(object sender, RoutedEventArgs e) =>
             PageContainer.Navigate(new GroupPage());
+
+        private void OnMoyGroupsClick(object sender, RoutedEventArgs e) =>
+            PageContainer.Navigate(new TeacherInfoPage());
     }
 }

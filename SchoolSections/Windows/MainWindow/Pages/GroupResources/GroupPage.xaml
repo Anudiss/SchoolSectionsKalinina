@@ -22,7 +22,8 @@
                  Background="Transparent">
             <ListBox.ItemTemplate>
                 <DataTemplate DataType="{x:Type database:Manager}">
-                    <local:GroupCard Manager="{Binding Path=.}"/>
+                    <local:GroupCard Manager="{Binding Path=.}"
+                                     AttendanceClick="OnAttendanceClick"/>
                 </DataTemplate>
             </ListBox.ItemTemplate>
         </ListBox>

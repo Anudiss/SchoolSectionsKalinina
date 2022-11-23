@@ -1,4 +1,5 @@
 ﻿using SchoolSections.DatabaseConnection;
+using System;
 using System.Windows;
 using System.Windows.Controls;
 
@@ -21,9 +22,14 @@ namespace SchoolSections.Windows.MainWindow.Pages.GroupResources
             DependencyProperty.Register("Manager", typeof(Manager), typeof(GroupCard));
         #endregion
 
+        public event Action<Manager> AttendanceClick;
+
         public GroupCard()
         {
             InitializeComponent();
         }
+
+        private void OnAttendanceClick(object sender, RoutedEventArgs e) =>
+            AttendanceClick?.Invoke(Manager);
     }
 }

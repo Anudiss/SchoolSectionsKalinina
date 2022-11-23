@@ -1,0 +1,27 @@
+﻿<Page x:Class="SchoolSections.Windows.MainWindow.Pages.TeacherPageResources.TeacherInfoPage"
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+      xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+      xmlns:local="clr-namespace:SchoolSections.Windows.MainWindow.Pages.TeacherPageResources"
+      xmlns:database="clr-namespace:SchoolSections.DatabaseConnection"
+      xmlns:groups="clr-namespace:SchoolSections.Windows.MainWindow.Pages.GroupResources"
+      mc:Ignorable="d" 
+      Title="TeacherInfoPage"
+      Name="TeacherInfoPageRoot">
+
+    <Grid>
+        <ListBox x:Name="ManagerContainer"
+                 ItemsSource="{Binding ElementName=TeacherInfoPageRoot, Path=Managers}"
+                 ItemContainerStyle="{StaticResource ItemsContainerStyle}"
+                 Background="Transparent">
+            <ListBox.ItemTemplate>
+                <DataTemplate DataType="{x:Type database:Manager}">
+                    <local:TeacherInfoCard Manager="{Binding Path=.}"
+                                           OnAttendanceClick="OnAttendanceClick"
+                                           OnStudentsClick="OnStudentsClick"/>
+                </DataTemplate>
+            </ListBox.ItemTemplate>
+        </ListBox>
+    </Grid>
+</Page>

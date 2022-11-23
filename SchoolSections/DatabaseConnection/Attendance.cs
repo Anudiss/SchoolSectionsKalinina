@@ -23,6 +23,7 @@ namespace SchoolSections.DatabaseConnection
         public int Id_attendance { get; set; }
         public int Timetable_id { get; set; }
         public System.DateTime Date { get; set; }
+        public Nullable<bool> IsDeleted { get; set; }
     
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<Attendance_students> Attendance_students { get; set; }

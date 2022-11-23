@@ -28,5 +28,13 @@ namespace SchoolSections.Windows.MainWindow.Pages.GroupResources
 
             Managers = DatabaseContext.Entities.Manager.Local;
         }
+
+        public void OnAttendanceClick(Manager manager)
+        {
+            new GroupEditWindow()
+            {
+                Manager = manager
+            }.ShowDialog();
+        }
     }
 }

@@ -37,6 +37,7 @@
 
         <StackPanel Orientation="Vertical"
                     Grid.Row="1" Grid.Column="0">
+            <Button Content="Мои группы" Click="OnMoyGroupsClick"/>
             <Button Content="Кружки" Click="OnSectionClick"/>
             <Button Content="Учителя" Click="OnTeacherClick"/>
             <Button Content="Группы" Click="OnGroupsClick"/>

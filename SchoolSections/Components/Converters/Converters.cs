@@ -1,19 +1,15 @@
-﻿using SchoolSections.Components.UserControls;
-using SchoolSections.DatabaseConnection;
+﻿using SchoolSections.DatabaseConnection;
 using SchoolSections.Permissions;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Data.Entity;
-using System.Drawing.Imaging;
 using System.Globalization;
 using System.IO;
 using System.Linq;
-using System.Windows;
 using System.Windows.Data;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
-using DayOfWeek = SchoolSections.DatabaseConnection.DayOfWeek;
 
 namespace SchoolSections.Components.Converters
 {
@@ -40,7 +36,7 @@ namespace SchoolSections.Components.Converters
             if (SessionData.AuthorizatedUser.PermissionRole == PermissionRole.Director)
                 return "Заместитель директора";
 
-            Teacher teacher = SessionData.AuthorizatedUser.Teacher.First();
+            Teacher teacher = SessionData.AuthorizatedUser.SingleTeacher;
             return teacher == null ? "" : $"{teacher.Surname} {teacher.Name} {teacher.Patronymic}";
         }
 
@@ -88,6 +84,28 @@ namespace SchoolSections.Components.Converters
             return new ObservableCollection<Timetable>(from timetable in DatabaseContext.Entities.Timetable.Local
                                                        where timetable.Manager.Section_id == section.Id_section
                                                        select timetable);
+        }
+
+        public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture) => null;
+    }
+    #endregion
+    #region ExpectStudentConverter
+    [ValueConversion(typeof(Manager), typeof(ObservableCollection<Student>))]
+    public class ExpectStudentConverter : IValueConverter
+    {
+        public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
+        {
+            if (value is Manager manager == false)
+                return null;
+
+            var students = from student_manager in DatabaseContext.Entities.Student_manager.Local
+                           where student_manager.Manager == manager
+                           select student_manager.Student;
+
+            IEnumerable<Student> excepted = DatabaseContext.Entities.Student.Local.Except(students);
+            if (parameter is Student student && student != null)
+                excepted.Append(student);
+            return excepted.OrderBy(s => s.FullName);
         }
 
         public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture) => null;

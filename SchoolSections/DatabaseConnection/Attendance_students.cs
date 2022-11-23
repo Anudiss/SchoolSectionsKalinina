@@ -17,6 +17,8 @@ namespace SchoolSections.DatabaseConnection
         public int Id_attendance_students { get; set; }
         public int Attendance_id { get; set; }
         public int Student_id { get; set; }
+        public Nullable<bool> IsAttented { get; set; }
+        public Nullable<bool> IsDeleted { get; set; }
     
         public virtual Attendance Attendance { get; set; }
         public virtual Student Student { get; set; }

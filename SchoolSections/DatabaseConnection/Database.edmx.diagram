@@ -5,8 +5,8 @@
     <!-- Diagram content (shape and connector positions) -->
     <edmx:Diagrams>
       <Diagram DiagramId="69a1aa9c215c49e9a9f2eedda8d31750" Name="Diagram1" ZoomLevel="83">
-        <EntityTypeShape EntityType="SchoolModel.Attendance" Width="1.5" PointX="15" PointY="5.125" />
-        <EntityTypeShape EntityType="SchoolModel.Attendance_students" Width="1.5" PointX="17.25" PointY="5.125" />
+        <EntityTypeShape EntityType="SchoolModel.Attendance" Width="1.5" PointX="15" PointY="5" />
+        <EntityTypeShape EntityType="SchoolModel.Attendance_students" Width="1.5" PointX="17.25" PointY="5" />
         <EntityTypeShape EntityType="SchoolModel.Cabinet" Width="1.5" PointX="3" PointY="2.5" />
         <EntityTypeShape EntityType="SchoolModel.Class" Width="1.5" PointX="5.25" PointY="12.375" />
         <EntityTypeShape EntityType="SchoolModel.DayOfWeek" Width="1.5" PointX="10.5" PointY="2.25" />

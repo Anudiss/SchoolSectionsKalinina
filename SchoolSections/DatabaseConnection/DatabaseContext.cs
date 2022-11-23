@@ -17,6 +17,10 @@ namespace SchoolSections.DatabaseConnection
             Entities.Teacher.Load();
             Entities.DayOfWeek.Load();
             Entities.Manager.Load();
+            Entities.Student.Load();
+            Entities.Attendance.Load();
+            Entities.Attendance_students.Load();
+            Entities.Student_manager.Load();
         }
     }
 }

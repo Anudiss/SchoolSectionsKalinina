@@ -1,5 +1,6 @@
 ﻿using SchoolSections.Permissions;
 using System;
+using System.Linq;
 
 namespace SchoolSections.DatabaseConnection
 {
@@ -14,5 +15,7 @@ namespace SchoolSections.DatabaseConnection
             }
             set => Role_ID = (int)value;
         }
+
+        public Teacher SingleTeacher => Teacher.FirstOrDefault();
     }
 }

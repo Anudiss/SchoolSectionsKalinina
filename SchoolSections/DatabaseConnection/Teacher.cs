@@ -23,8 +23,8 @@ namespace SchoolSections.DatabaseConnection
         public int Id_teacher { get; set; }
         public string Surname { get; set; }
         public string Name { get; set; }
+        public Nullable<int> User_id { get; set; }
         public string Patronymic { get; set; }
-        public Nullable<int> User_ID { get; set; }
         public Nullable<bool> IsDeleted { get; set; }
     
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]

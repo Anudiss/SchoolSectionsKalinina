@@ -1,6 +1,7 @@
 ﻿using SchoolSections.DatabaseConnection;
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 
 namespace SchoolSections.Components.PartialClasses
@@ -120,5 +121,46 @@ namespace SchoolSections.Components.PartialClasses
                           timetable.IsDeleted != true
                     select timetable.Time).FirstOrDefault();
         }
+    }
+
+    public class FullAttendance
+    {
+        private int year;
+
+        public Student_manager StudentManager { get; set; }
+        public int Month { get; set; }
+        public int Year
+        {
+            get => year;
+            set
+            {
+                year = value;
+                UpdateAttendances();
+            }
+        }
+
+        public ObservableCollection<Attend> Attendances { get; set; }
+
+        private void UpdateAttendances()
+        {
+            if (StudentManager == null || Month < 1 || Month > 12 || Year < 1)
+                return;
+
+            Attendances = new ObservableCollection<Attend>(from attendanceStudent in DatabaseContext.Entities.Attendance_students.Local
+                                                           where attendanceStudent.Attendance.Date >= new DateTime(Year, Month, 1) &&
+                                                                 attendanceStudent.Attendance.Date <= new DateTime(Year, Month, DateTime.DaysInMonth(Year, Month)) &&
+                                                                 attendanceStudent.Student == StudentManager.Student
+                                                           select new Attend()
+                                                           {
+                                                               IsAttented = attendanceStudent.IsAttented,
+                                                               Date = attendanceStudent.Attendance.Date
+                                                           });
+        }
+    }
+
+    public class Attend
+    {
+        public bool? IsAttented { get; set; }
+        public DateTime Date { get; set; }
     }
 }
