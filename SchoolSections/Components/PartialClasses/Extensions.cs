@@ -10,6 +10,12 @@ namespace SchoolSections.Components.PartialClasses
     {
         private Manager manager;
 
+        public IEnumerable<Timetable> Timetables => from timetable in DatabaseContext.Entities.Timetable.Local
+                                                    where timetable.IsDeleted != true &&
+                                                          timetable.Manager == Manager
+                                                    select timetable;
+
+
         public Manager Manager
         {
             get => manager;
@@ -63,7 +69,7 @@ namespace SchoolSections.Components.PartialClasses
             get => this[System.DayOfWeek.Sunday];
             set => this[System.DayOfWeek.Sunday] = value;
         }
-        public decimal Cabinet { get; set; }
+        public int Cabinet { get; set; }
 
         private void UpdateTimes()
         {
@@ -78,7 +84,7 @@ namespace SchoolSections.Components.PartialClasses
                 { System.DayOfWeek.Sunday, GetWeekDayTime(System.DayOfWeek.Sunday) }
             };
 
-            Cabinet = Manager.Section?.Cabinet.Number ?? 0;
+            Cabinet = Manager.Section?.Cabinet ?? 0;
         }
 
         public IEnumerable<System.DayOfWeek> GetTimeConflicts(IEnumerable<FullTimetable> timetables)
@@ -149,7 +155,8 @@ namespace SchoolSections.Components.PartialClasses
             Attendances = new ObservableCollection<Attend>(from attendanceStudent in DatabaseContext.Entities.Attendance_students.Local
                                                            where attendanceStudent.Attendance.Date >= new DateTime(Year, Month, 1) &&
                                                                  attendanceStudent.Attendance.Date <= new DateTime(Year, Month, DateTime.DaysInMonth(Year, Month)) &&
-                                                                 attendanceStudent.Student == StudentManager.Student
+                                                                 attendanceStudent.Student == StudentManager.Student &&
+                                                                 attendanceStudent.IsDeleted != true && attendanceStudent.Student.IsDeleted != true
                                                            select new Attend()
                                                            {
                                                                IsAttented = attendanceStudent.IsAttented,

@@ -1,12 +1,11 @@
 ﻿using SchoolSections.DatabaseConnection;
 using SchoolSections.Permissions;
-using System.Collections.ObjectModel;
-using System.Windows;
-using System.Linq;
-using System.Windows.Controls;
-using System.Collections;
-using System.Collections.Generic;
 using SchoolSections.Windows.MainWindow.Pages.GroupResources;
+using System.Collections.Generic;
+using System.Collections.ObjectModel;
+using System.Linq;
+using System.Windows;
+using System.Windows.Controls;
 
 namespace SchoolSections.Windows.MainWindow.Pages.TeacherPageResources
 {
@@ -56,17 +55,18 @@ namespace SchoolSections.Windows.MainWindow.Pages.TeacherPageResources
             InitializeComponent();
 
             Managers = new ObservableCollection<Manager>(from manager in DatabaseContext.Entities.Manager.Local
-                                                         where manager.Teacher == SessionData.AuthorizatedUser.SingleTeacher
+                                                         where manager.Teacher == SessionData.AuthorizatedUser.SingleTeacher && manager.IsDeleted != true
                                                          select manager);
 
             StudentManagers = new ObservableCollection<Student_manager>(from student_manager in DatabaseContext.Entities.Student_manager.Local
-                                                                        where student_manager.Manager.Teacher == SessionData.AuthorizatedUser.SingleTeacher
+                                                                        where student_manager.Manager.Teacher == SessionData.AuthorizatedUser.SingleTeacher && student_manager.IsDeleted != true
                                                                         select student_manager);
             Students = new ObservableCollection<Student>(from student_manager in StudentManagers
+                                                         where student_manager.IsDeleted != true
                                                          select student_manager.Student);
 
             OtherStudents = from student in DatabaseContext.Entities.Student.Local
-                            where Students?.Contains(student) == false
+                            where student.IsDeleted != true && Students?.Contains(student) == false
                             select student;
 
         }

@@ -31,5 +31,15 @@ namespace SchoolSections.DatabaseConnection
                     .Distinct()
                     .Select(manager => new FullTimetable() { Manager = manager });
         }
+
+        public void Delete()
+        {
+            if (IsDeleted == true)
+                return;
+
+            IsDeleted = true;
+            foreach (var manager in DatabaseContext.Entities.Manager.Local.Where(m => m.IsDeleted != true && m.Section == this))
+                manager.Delete();
+        }
     }
 }

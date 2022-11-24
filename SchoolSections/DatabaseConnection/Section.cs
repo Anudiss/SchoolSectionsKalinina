@@ -24,10 +24,9 @@ namespace SchoolSections.DatabaseConnection
         public string Name { get; set; }
         public decimal Capacity { get; set; }
         public Nullable<System.TimeSpan> Duration { get; set; }
-        public Nullable<int> Cabinet_id { get; set; }
+        public Nullable<int> Cabinet { get; set; }
         public Nullable<bool> IsDeleted { get; set; }
     
-        public virtual Cabinet Cabinet { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<Manager> Manager { get; set; }
         public virtual SectionImage SectionImage { get; set; }

@@ -7,11 +7,17 @@
         xmlns:local="clr-namespace:SchoolSections.Windows.MainWindow.Pages.TeacherPageResources"
         xmlns:database="clr-namespace:SchoolSections.DatabaseConnection"
         mc:Ignorable="d"
-        Title="StudentManagerWindow"
+        Title="Ученики группы"
         SizeToContent="WidthAndHeight" WindowStartupLocation="CenterScreen"
         Name="StudentManagerWindowRoot">
 
-    <Grid>
+    <Window.CommandBindings>
+        <CommandBinding Command="{x:Static local:StudentManagerWindow.RemoveCommand}"
+                        Executed="RemoveCommandExecute"
+                        CanExecute="RemoveCommandCanExecute"/>
+    </Window.CommandBindings>
+    
+    <Grid Margin="20 10">
         <Grid.RowDefinitions>
             <RowDefinition Height="*"/>
             <RowDefinition Height="Auto"/>
@@ -45,7 +51,9 @@
                 <DataGridTemplateColumn Header="Удаление">
                     <DataGridTemplateColumn.CellTemplate>
                         <DataTemplate DataType="{x:Type database:Student_manager}">
-                            <Button BorderBrush="Transparent" Background="Transparent">
+                            <Button BorderBrush="Transparent" Background="Transparent"
+                                    Command="{x:Static local:StudentManagerWindow.RemoveCommand}"
+                                    CommandParameter="{Binding Path=.}">
                                 <Button.Content>
                                     <fa:FontAwesome Icon="Close" Foreground="IndianRed"/>
                                 </Button.Content>

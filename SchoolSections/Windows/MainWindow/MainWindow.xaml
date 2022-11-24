@@ -37,10 +37,16 @@
 
         <StackPanel Orientation="Vertical"
                     Grid.Row="1" Grid.Column="0">
-            <Button Content="Мои группы" Click="OnMoyGroupsClick"/>
-            <Button Content="Кружки" Click="OnSectionClick"/>
-            <Button Content="Учителя" Click="OnTeacherClick"/>
-            <Button Content="Группы" Click="OnGroupsClick"/>
+            <Button Content="Мои группы" Click="OnMoyGroupsClick" Visibility="{Binding Converter={StaticResource PermissionToVisibilityConverter},
+                                                                                       ConverterParameter={x:Static permission:Permission.ShowMyGroups}}"/>
+            <Button Content="Кружки" Click="OnSectionClick" Visibility="{Binding Converter={StaticResource PermissionToVisibilityConverter},
+                                                                                       ConverterParameter={x:Static permission:Permission.ShowSectionsButton}}"/>
+            <Button Content="Учителя" Click="OnTeacherClick" Visibility="{Binding Converter={StaticResource PermissionToVisibilityConverter},
+                                                                                       ConverterParameter={x:Static permission:Permission.ShowTeachersButton}}"/>
+            <Button Content="Группы" Click="OnGroupsClick" Visibility="{Binding Converter={StaticResource PermissionToVisibilityConverter},
+                                                                                       ConverterParameter={x:Static permission:Permission.ShowGroupsButton}}"/>
+            <Button Content="Статистика" Click="OnStatisticsClick" Visibility="{Binding Converter={StaticResource PermissionToVisibilityConverter},
+                                                                                       ConverterParameter={x:Static permission:Permission.Statistics}}"/>
         </StackPanel>
 
         <Menu Background="Transparent"

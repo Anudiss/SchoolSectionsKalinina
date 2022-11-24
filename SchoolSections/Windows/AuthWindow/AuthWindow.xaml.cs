@@ -2,6 +2,7 @@
 using SchoolSections.Permissions;
 using System;
 using System.Collections.Generic;
+using System.Data.Entity;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -52,8 +53,9 @@ namespace SchoolSections.Windows.AuthWindow
             string login = LoginComponent.Text;
             string password = PasswordComponent.Password;
 
-            User authorizedUser = DatabaseContext.Entities.User.FirstOrDefault(user => user.Login == login &&
-                                                                                       user.Password == password);
+            DatabaseContext.Entities.User.Load();
+            User authorizedUser = DatabaseContext.Entities.User.Local.Where(user => user.IsDeleted != true).FirstOrDefault(user => user.Login == login &&
+                                                                                                                                   user.Password == password);
             if (authorizedUser == default)
                 throw new ArgumentException("Неверный логин или пароль");
 

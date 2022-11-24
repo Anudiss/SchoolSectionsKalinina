@@ -32,7 +32,7 @@
                     <Setter Property="HorizontalAlignment" Value="Right"/>
                 </Style>
             </Grid.Resources>
-            
+
             <uc:InputField x:Name="SearchComponent"
                            Grid.Column="0"
                            Foreground="{StaticResource GrayBackground}"
@@ -42,11 +42,6 @@
                            Margin="20 10"
                            Width="300"
                            TextChanged="OnSearch"/>
-
-            <Button Content="Добавить" Grid.Column="1"
-                    Visibility="{Binding Converter={StaticResource PermissionToVisibilityConverter},
-                                         ConverterParameter={x:Static permission:Permission.Add}}"
-                    Click="OnAddSection"/>
         </Grid>
 
         <ListBox x:Name="SectionContainer" ItemsSource="{Binding ElementName=SectionPageRoot, Path=Sections}"

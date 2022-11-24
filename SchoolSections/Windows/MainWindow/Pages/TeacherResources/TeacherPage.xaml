@@ -29,12 +29,6 @@
                            HorizontalAlignment="Left"
                            Width="300"
                            TextChanged="OnSearch"/>
-
-            <Button Content="Добавить" Style="{StaticResource Button}"
-                    Grid.Column="1"
-                    HorizontalAlignment="Right"
-                    Margin="0 0 20 0" Padding="10 3"
-                    Click="OnAddClick"/>
         </Grid>
 
         <ListBox Grid.Row="1" ItemsSource="{Binding ElementName=TeacherPageRoot, Path=Teachers}"

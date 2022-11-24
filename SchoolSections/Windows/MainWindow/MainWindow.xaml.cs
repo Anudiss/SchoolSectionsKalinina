@@ -3,6 +3,7 @@ using SchoolSections.Permissions;
 using SchoolSections.Windows.MainWindow.Pages;
 using SchoolSections.Windows.MainWindow.Pages.GroupResources;
 using SchoolSections.Windows.MainWindow.Pages.SectionResources;
+using SchoolSections.Windows.MainWindow.Pages.StatisticsResources;
 using SchoolSections.Windows.MainWindow.Pages.TeacherPageResources;
 using SchoolSections.Windows.MainWindow.Pages.TeacherResources;
 using System;
@@ -22,7 +23,10 @@ namespace SchoolSections.Windows.MainWindow
         {
             InitializeComponent();
 
-            PageContainer.Navigate(new SectionPage());
+            if (SessionData.AuthorizatedUser.PermissionRole == PermissionRole.Teacher)
+                PageContainer.Navigate(new TeacherInfoPage());
+            else if (SessionData.AuthorizatedUser.PermissionRole == PermissionRole.Director)
+                PageContainer.Navigate(new SectionPage());
         }
 
         private void OnUserChange(object sender, RoutedEventArgs e)
@@ -42,5 +46,8 @@ namespace SchoolSections.Windows.MainWindow
 
         private void OnMoyGroupsClick(object sender, RoutedEventArgs e) =>
             PageContainer.Navigate(new TeacherInfoPage());
+
+        private void OnStatisticsClick(object sender, RoutedEventArgs e) =>
+            PageContainer.Navigate(new StatisticsPage());
     }
 }

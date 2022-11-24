@@ -27,7 +27,6 @@ namespace SchoolSections.DatabaseConnection
     
         public virtual DbSet<Attendance> Attendance { get; set; }
         public virtual DbSet<Attendance_students> Attendance_students { get; set; }
-        public virtual DbSet<Cabinet> Cabinet { get; set; }
         public virtual DbSet<Class> Class { get; set; }
         public virtual DbSet<DayOfWeek> DayOfWeek { get; set; }
         public virtual DbSet<Image> Image { get; set; }

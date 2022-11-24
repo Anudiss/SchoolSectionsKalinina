@@ -73,6 +73,8 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="Components\Converters\Converters.cs" />
+    <Compile Include="Components\PartialClasses\Attendance.cs" />
+    <Compile Include="Components\PartialClasses\Attendance_students.cs" />
     <Compile Include="Components\PartialClasses\Class.cs" />
     <Compile Include="Components\PartialClasses\DayOfWeek.cs" />
     <Compile Include="Components\PartialClasses\Extensions.cs" />
@@ -81,7 +83,9 @@
     <Compile Include="Components\PartialClasses\Section.cs" />
     <Compile Include="Components\PartialClasses\SectionImage.cs" />
     <Compile Include="Components\PartialClasses\Student.cs" />
+    <Compile Include="Components\PartialClasses\Student_manager.cs" />
     <Compile Include="Components\PartialClasses\Teacher.cs" />
+    <Compile Include="Components\PartialClasses\Timetable.cs" />
     <Compile Include="Components\PartialClasses\User.cs" />
     <Compile Include="Components\PartialClasses\Worktime.cs" />
     <Compile Include="Components\UserControls\InputField.xaml.cs">
@@ -94,9 +98,6 @@
       <DependentUpon>Database.tt</DependentUpon>
     </Compile>
     <Compile Include="DatabaseConnection\Attendance_students.cs">
-      <DependentUpon>Database.tt</DependentUpon>
-    </Compile>
-    <Compile Include="DatabaseConnection\Cabinet.cs">
       <DependentUpon>Database.tt</DependentUpon>
     </Compile>
     <Compile Include="DatabaseConnection\Class.cs">
@@ -188,6 +189,9 @@
     </Compile>
     <Compile Include="Windows\MainWindow\Pages\SectionResources\SectionPage.xaml.cs">
       <DependentUpon>SectionPage.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Windows\MainWindow\Pages\StatisticsResources\StatisticsPage.xaml.cs">
+      <DependentUpon>StatisticsPage.xaml</DependentUpon>
     </Compile>
     <Compile Include="Windows\MainWindow\Pages\TeacherPageResources\StudentManagerWindow.xaml.cs">
       <DependentUpon>StudentManagerWindow.xaml</DependentUpon>
@@ -300,6 +304,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Windows\MainWindow\Pages\SectionResources\SectionPage.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Windows\MainWindow\Pages\StatisticsResources\StatisticsPage.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

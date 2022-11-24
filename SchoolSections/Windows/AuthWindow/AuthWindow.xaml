@@ -9,7 +9,7 @@
         SizeToContent="WidthAndHeight"
         ResizeMode="NoResize"
         WindowStartupLocation="CenterScreen"
-        Title="AuthWindow"
+        Title="Окно авторизации"
         Name="AuthWindowRoot"
         Background="{StaticResource DarkBlueBackground}">
 

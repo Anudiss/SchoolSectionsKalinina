@@ -3,6 +3,7 @@ using System.Collections.ObjectModel;
 using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Input;
 
 namespace SchoolSections.Windows.MainWindow.Pages.TeacherPageResources
 {
@@ -11,6 +12,12 @@ namespace SchoolSections.Windows.MainWindow.Pages.TeacherPageResources
     /// </summary>
     public partial class StudentManagerWindow : Window
     {
+        public static RoutedCommand RemoveCommand
+        {
+            get => removeCommand ?? (removeCommand = new RoutedCommand());
+            set => removeCommand = value;
+        }
+
         #region Manager
         public Manager Manager
         {
@@ -19,7 +26,8 @@ namespace SchoolSections.Windows.MainWindow.Pages.TeacherPageResources
             {
                 SetValue(ManagerProperty, value);
                 StudentManagers = new ObservableCollection<Student_manager>(from student_manager in DatabaseContext.Entities.Student_manager.Local
-                                                                            where student_manager.Manager == value
+                                                                            where student_manager.Manager == value &&
+                                                                                  student_manager.IsDeleted != true
                                                                             select student_manager);
             }
         }
@@ -60,12 +68,13 @@ namespace SchoolSections.Windows.MainWindow.Pages.TeacherPageResources
         // Using a DependencyProperty as the backing store for MyProperty.  This enables animation, styling, binding, etc...
         public static readonly DependencyProperty OtherStudentsProperty =
             DependencyProperty.Register("OtherStudents", typeof(ObservableCollection<Student>), typeof(StudentManagerWindow));
+        private static RoutedCommand removeCommand;
         #endregion
 
         public StudentManagerWindow()
         {
             InitializeComponent();
-            Students = new ObservableCollection<Student>(DatabaseContext.Entities.Student.Local.OrderBy(student => student.FullName));
+            Students = new ObservableCollection<Student>(DatabaseContext.Entities.Student.Local.Where(s => s.IsDeleted != true).OrderBy(student => student.FullName));
         }
 
         private void StudentManagerContainer_CellEditEnding(object sender, DataGridCellEditEndingEventArgs e)
@@ -78,15 +87,16 @@ namespace SchoolSections.Windows.MainWindow.Pages.TeacherPageResources
                 {
                     if (student != null)
                         MessageBox.Show("Этот студент уже в группе");
-                    
+
                     return;
                 }
 
                 if (student == null && !e.Row.IsNewItem)
                 {
                     comboBox.SelectedItem = student = StudentManagers[e.Row.AlternationIndex].Student;
-                    (e.Row.Item as Student_manager).Student = student;
                 }
+                if (student != null)
+                    (e.Row.Item as Student_manager).Student = student;
             }
         }
 
@@ -100,8 +110,11 @@ namespace SchoolSections.Windows.MainWindow.Pages.TeacherPageResources
 
         private void StudentManagerContainer_BeginningEdit(object sender, DataGridBeginningEditEventArgs e)
         {
+            if (!e.Row.IsNewItem)
+                e.Cancel = true;
+
             var exceptedStudents = Students.Except(from student_manager in DatabaseContext.Entities.Student_manager.Local
-                                                   where student_manager.Manager == Manager
+                                                   where student_manager.Manager == Manager && student_manager.IsDeleted != true
                                                    select student_manager.Student);
 
             if (!e.Row.IsNewItem)
@@ -113,11 +126,45 @@ namespace SchoolSections.Windows.MainWindow.Pages.TeacherPageResources
         {
             foreach (var studentManager in StudentManagers)
             {
-                if (DatabaseContext.Entities.Student_manager.Any(student_Manager => student_Manager.Id_student_section == studentManager.Id_student_section) == false)
-                    DatabaseContext.Entities.Student_manager.Add(studentManager);
+                Student_manager student_Manager1 = DatabaseContext.Entities.Student_manager.Local.Where(sm => sm.IsDeleted != true).FirstOrDefault(student_Manager => student_Manager == studentManager);
+                if (student_Manager1 == null)
+                    DatabaseContext.Entities.Student_manager.Add(student_Manager1 = studentManager);
+
+                var timetables = from timetable in DatabaseContext.Entities.Timetable.Local
+                                 where timetable.IsDeleted != true &&
+                                       timetable.Manager == studentManager.Manager
+                                 select timetable;
+
+                var attendances = from attendance in DatabaseContext.Entities.Attendance.Local
+                                  join timetable in timetables on attendance.Timetable equals timetable
+                                  where attendance.IsDeleted != true
+                                  select attendance;
+
+                foreach (var attendance in attendances.Distinct())
+                {
+                    if (attendance.Attendance_students.Any(ast => ast.Student == studentManager.Student))
+                        continue;
+
+                    attendance.Attendance_students.Add(new Attendance_students()
+                    {
+                        Attendance = attendance,
+                        Student = studentManager.Student,
+                        IsAttented = null
+                    });
+                }
             }
             DatabaseContext.Entities.SaveChanges();
             Close();
         }
+
+        private void RemoveCommandExecute(object sender, ExecutedRoutedEventArgs e)
+        {
+            Student_manager student_Manager = e.Parameter as Student_manager;
+            student_Manager.Delete();
+            StudentManagers.Remove(student_Manager);
+        }
+
+        private void RemoveCommandCanExecute(object sender, CanExecuteRoutedEventArgs e) =>
+                e.CanExecute = e.Parameter is Student_manager;
     }
 }

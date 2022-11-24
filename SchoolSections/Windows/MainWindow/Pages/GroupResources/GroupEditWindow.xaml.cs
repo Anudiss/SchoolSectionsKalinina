@@ -1,5 +1,6 @@
 ﻿using SchoolSections.Components.PartialClasses;
 using SchoolSections.DatabaseConnection;
+using SchoolSections.Permissions;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -9,7 +10,6 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Controls.Primitives;
 using System.Windows.Data;
-using DayOfWeek = SchoolSections.DatabaseConnection.DayOfWeek;
 
 namespace SchoolSections.Windows.MainWindow.Pages.GroupResources
 {
@@ -77,12 +77,12 @@ namespace SchoolSections.Windows.MainWindow.Pages.GroupResources
             MonthSelector.ItemsSource = DateTimeFormatInfo.CurrentInfo.MonthNames.Where(month => month != string.Empty);
             Month = DateTime.Today.Month;
 
-            int minYear = DatabaseContext.Entities.Attendance.Count() == 0 ? DateTime.Today.Year : DatabaseContext.Entities.Attendance.Min(attendance => attendance.Date.Year);
+            int minYear = DatabaseContext.Entities.Attendance.Where(a => a.IsDeleted != true).Count() == 0 ? DateTime.Today.Year : DatabaseContext.Entities.Attendance.Where(a => a.IsDeleted != true).Min(attendance => attendance.Date.Year);
             int deltaYear = DateTime.Today.Year - minYear;
             YearSelector.ItemsSource = Enumerable.Range(minYear, deltaYear + 1);
             YearSelector.SelectedIndex = deltaYear;
 
-            Students = DatabaseContext.Entities.Student.Local;
+            Students = new ObservableCollection<Student>(DatabaseContext.Entities.Student.Local.Where(s => s.IsDeleted != true));
         }
 
         private void InitializeAttendances()
@@ -91,19 +91,51 @@ namespace SchoolSections.Windows.MainWindow.Pages.GroupResources
 
             var attendances = from a in DatabaseContext.Entities.Attendance.Local
                               where a.Timetable.Manager == Manager &&
-                                    a.Timetable.Time != null
+                                    a.Timetable.Time != null &&
+                                    a.IsDeleted != true
                               select a;
-            if (attendances.Count() == 0)
-                return;
 
             var timetables = from timetable in DatabaseContext.Entities.Timetable.Local
                              where timetable.Manager == Manager &&
-                                   timetable.Time != null
+                                   timetable.Time != null &&
+                                   timetable.IsDeleted != true
                              select timetable;
+
             var students = from sm in DatabaseContext.Entities.Student_manager.Local
-                           where sm.Manager == Manager
+                           where sm.Manager == Manager &&
+                                 sm.IsDeleted != true
                            select sm.Student;
-            var weekDays = timetables.Select(t => t.DayOfWeek.WeekDay);
+
+            if (attendances.Count() == 0)
+            {
+                if (timetables.Count() == 0)
+                    return;
+                System.DayOfWeek weekDay = Enum.GetValues(typeof(System.DayOfWeek)).Cast<System.DayOfWeek>()
+                                                                                   .Reverse()
+                                                                                   .First(day => timetables.Any(t => t.DayOfWeek.WeekDay == day) == true);
+
+                Timetable timetable = timetables.First(t => t.DayOfWeek.WeekDay == weekDay);
+                if (timetable == null)
+                    return;
+                
+                long ticks = DateTime.Now.Ticks - TimeSpan.TicksPerDay * Math.Abs((int)DateTime.Now.DayOfWeek - (int)weekDay);
+                Attendance attendance;
+                DatabaseContext.Entities.Attendance.Add(attendance = new Attendance()
+                {
+                    Timetable = timetable,
+                    Date = new DateTime(ticks),
+                });
+
+                foreach (var student in students)
+                    attendance.Attendance_students.Add(new Attendance_students()
+                    {
+                        Attendance = attendance,
+                        Student = student,
+                        IsAttented = true
+                    });
+                return;
+            }
+
             var lastDate = attendances.Max(a => a.Date);
 
             var deltaDays = (now - lastDate).Days;
@@ -131,8 +163,6 @@ namespace SchoolSections.Windows.MainWindow.Pages.GroupResources
                         IsAttented = true
                     });
             }
-
-            DatabaseContext.Entities.SaveChanges();
         }
 
         private void InitializeDataGrid()
@@ -146,7 +176,8 @@ namespace SchoolSections.Windows.MainWindow.Pages.GroupResources
             });
 
             IEnumerable<FullAttendance> attendances = from student_manager in DatabaseContext.Entities.Student_manager.Local
-                                                      where student_manager.Manager == Manager
+                                                      where student_manager.Manager == Manager && student_manager.Student.IsDeleted != true &&
+                                                            student_manager.IsDeleted != true
                                                       select new FullAttendance()
                                                       {
                                                           StudentManager = student_manager,
@@ -154,18 +185,21 @@ namespace SchoolSections.Windows.MainWindow.Pages.GroupResources
                                                           Year = Year
                                                       };
 
-            List<DateTime> dates = attendances.First().Attendances.Select(a => a.Date).ToList();
-            for (int i = 0; i < dates.Count; i++)
+            if (attendances.Count() != 0)
             {
-                AttendanceContainer.Columns.Add(new DataGridTemplateColumn()
+                List<DateTime> dates = attendances.First().Attendances.Select(a => a.Date).ToList();
+                for (int i = 0; i < dates.Count; i++)
                 {
-                    Header = $"{dates[i].Day}",
-                    CellTemplate = new DataTemplate()
+                    AttendanceContainer.Columns.Add(new DataGridTemplateColumn()
                     {
-                        DataType = typeof(FullAttendance),
-                        VisualTree = CreateCheckBox(i)
-                    }
-                });
+                        Header = $"{dates[i].Day}",
+                        CellTemplate = new DataTemplate()
+                        {
+                            DataType = typeof(FullAttendance),
+                            VisualTree = CreateCheckBox(i)
+                        }
+                    });
+                }
             }
             Attendance = new ObservableCollection<FullAttendance>(attendances);
         }
@@ -174,6 +208,7 @@ namespace SchoolSections.Windows.MainWindow.Pages.GroupResources
         {
             FrameworkElementFactory frameworkElement = new FrameworkElementFactory(typeof(CheckBox));
             frameworkElement.SetValue(ToggleButton.IsThreeStateProperty, true);
+            frameworkElement.SetValue(IsEnabledProperty, Permission.MakeAttendance.Has());
             frameworkElement.SetBinding(ToggleButton.IsCheckedProperty, new Binding($"Attendances[{index}].IsAttented")
             {
                 UpdateSourceTrigger = UpdateSourceTrigger.PropertyChanged

@@ -24,13 +24,6 @@
           <Property Name="IsAttented" Type="bit" />
           <Property Name="IsDeleted" Type="bit" />
         </EntityType>
-        <EntityType Name="Cabinet">
-          <Key>
-            <PropertyRef Name="ID" />
-          </Key>
-          <Property Name="ID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
-          <Property Name="Number" Type="decimal" Precision="4" Scale="0" Nullable="false" />
-        </EntityType>
         <EntityType Name="Class">
           <Key>
             <PropertyRef Name="ClassNumber" />
@@ -78,7 +71,7 @@
           <Property Name="Name" Type="varchar" MaxLength="50" Nullable="false" />
           <Property Name="Capacity" Type="decimal" Precision="2" Scale="0" Nullable="false" />
           <Property Name="Duration" Type="time" Precision="0" />
-          <Property Name="Cabinet_id" Type="int" />
+          <Property Name="Cabinet" Type="int" />
           <Property Name="IsDeleted" Type="bit" />
         </EntityType>
         <EntityType Name="SectionImage">
@@ -155,6 +148,7 @@
           <Property Name="Login" Type="varchar" MaxLength="50" Nullable="false" />
           <Property Name="Password" Type="varchar" MaxLength="50" />
           <Property Name="Role_ID" Type="int" />
+          <Property Name="IsDeleted" Type="bit" />
         </EntityType>
         <EntityType Name="Worktime">
           <Key>
@@ -222,18 +216,6 @@
             </Principal>
             <Dependent Role="Manager">
               <PropertyRef Name="Teacher_id" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK_Section_Cabinet">
-          <End Role="Cabinet" Type="Self.Cabinet" Multiplicity="0..1" />
-          <End Role="Section" Type="Self.Section" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="Cabinet">
-              <PropertyRef Name="ID" />
-            </Principal>
-            <Dependent Role="Section">
-              <PropertyRef Name="Cabinet_id" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
@@ -362,7 +344,6 @@
         <EntityContainer Name="Хранилище SchoolModelContainer">
           <EntitySet Name="Attendance" EntityType="Self.Attendance" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Attendance_students" EntityType="Self.Attendance_students" Schema="dbo" store:Type="Tables" />
-          <EntitySet Name="Cabinet" EntityType="Self.Cabinet" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Class" EntityType="Self.Class" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="DayOfWeek" EntityType="Self.DayOfWeek" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Image" EntityType="Self.Image" Schema="dbo" store:Type="Tables" />
@@ -397,10 +378,6 @@
           <AssociationSet Name="FK_Manager_Teacher" Association="Self.FK_Manager_Teacher">
             <End Role="Teacher" EntitySet="Teacher" />
             <End Role="Manager" EntitySet="Manager" />
-          </AssociationSet>
-          <AssociationSet Name="FK_Section_Cabinet" Association="Self.FK_Section_Cabinet">
-            <End Role="Cabinet" EntitySet="Cabinet" />
-            <End Role="Section" EntitySet="Section" />
           </AssociationSet>
           <AssociationSet Name="FK_SectionImage_Section" Association="Self.FK_SectionImage_Section">
             <End Role="Section" EntitySet="Section" />
@@ -450,7 +427,6 @@
         <EntityContainer Name="SchoolEntities" annotation:LazyLoadingEnabled="true">
           <EntitySet Name="Attendance" EntityType="SchoolModel.Attendance" />
           <EntitySet Name="Attendance_students" EntityType="SchoolModel.Attendance_students" />
-          <EntitySet Name="Cabinet" EntityType="SchoolModel.Cabinet" />
           <EntitySet Name="Class" EntityType="SchoolModel.Class" />
           <EntitySet Name="DayOfWeek" EntityType="SchoolModel.DayOfWeek" />
           <EntitySet Name="Image" EntityType="SchoolModel.Image" />
@@ -477,10 +453,6 @@
           <AssociationSet Name="FK_Attendance_students_Student" Association="SchoolModel.FK_Attendance_students_Student">
             <End Role="Student" EntitySet="Student" />
             <End Role="Attendance_students" EntitySet="Attendance_students" />
-          </AssociationSet>
-          <AssociationSet Name="FK_Section_Cabinet" Association="SchoolModel.FK_Section_Cabinet">
-            <End Role="Cabinet" EntitySet="Cabinet" />
-            <End Role="Section" EntitySet="Section" />
           </AssociationSet>
           <AssociationSet Name="FK_Student_Class" Association="SchoolModel.FK_Student_Class">
             <End Role="Class" EntitySet="Class" />
@@ -554,14 +526,6 @@
           <NavigationProperty Name="Attendance" Relationship="SchoolModel.FK_Attendance_students_Attendance" FromRole="Attendance_students" ToRole="Attendance" />
           <NavigationProperty Name="Student" Relationship="SchoolModel.FK_Attendance_students_Student" FromRole="Attendance_students" ToRole="Student" />
         </EntityType>
-        <EntityType Name="Cabinet">
-          <Key>
-            <PropertyRef Name="ID" />
-          </Key>
-          <Property Name="ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="Number" Type="Decimal" Nullable="false" Precision="4" Scale="0" />
-          <NavigationProperty Name="Section" Relationship="SchoolModel.FK_Section_Cabinet" FromRole="Cabinet" ToRole="Section" />
-        </EntityType>
         <EntityType Name="Class">
           <Key>
             <PropertyRef Name="ClassNumber" />
@@ -617,9 +581,8 @@
           <Property Name="Name" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
           <Property Name="Capacity" Type="Decimal" Nullable="false" Precision="2" Scale="0" />
           <Property Name="Duration" Type="Time" Precision="0" />
-          <Property Name="Cabinet_id" Type="Int32" />
+          <Property Name="Cabinet" Type="Int32" />
           <Property Name="IsDeleted" Type="Boolean" />
-          <NavigationProperty Name="Cabinet" Relationship="SchoolModel.FK_Section_Cabinet" FromRole="Section" ToRole="Cabinet" />
           <NavigationProperty Name="Manager" Relationship="SchoolModel.FK_Manager_Section" FromRole="Section" ToRole="Manager" />
           <NavigationProperty Name="SectionImage" Relationship="SchoolModel.FK_SectionImage_Section" FromRole="Section" ToRole="SectionImage" />
         </EntityType>
@@ -710,6 +673,7 @@
           <Property Name="Login" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
           <Property Name="Password" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
           <Property Name="Role_ID" Type="Int32" />
+          <Property Name="IsDeleted" Type="Boolean" />
           <NavigationProperty Name="Role" Relationship="SchoolModel.FK_User_Role" FromRole="User" ToRole="Role" />
           <NavigationProperty Name="Teacher" Relationship="SchoolModel.FK_Teacher_User" FromRole="User" ToRole="Teacher" />
         </EntityType>
@@ -756,18 +720,6 @@
             </Principal>
             <Dependent Role="Attendance_students">
               <PropertyRef Name="Student_id" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK_Section_Cabinet">
-          <End Type="SchoolModel.Cabinet" Role="Cabinet" Multiplicity="0..1" />
-          <End Type="SchoolModel.Section" Role="Section" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="Cabinet">
-              <PropertyRef Name="ID" />
-            </Principal>
-            <Dependent Role="Section">
-              <PropertyRef Name="Cabinet_id" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
@@ -944,14 +896,6 @@
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
-          <EntitySetMapping Name="Cabinet">
-            <EntityTypeMapping TypeName="SchoolModel.Cabinet">
-              <MappingFragment StoreEntitySet="Cabinet">
-                <ScalarProperty Name="Number" ColumnName="Number" />
-                <ScalarProperty Name="ID" ColumnName="ID" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
           <EntitySetMapping Name="Class">
             <EntityTypeMapping TypeName="SchoolModel.Class">
               <MappingFragment StoreEntitySet="Class">
@@ -999,7 +943,7 @@
             <EntityTypeMapping TypeName="SchoolModel.Section">
               <MappingFragment StoreEntitySet="Section">
                 <ScalarProperty Name="IsDeleted" ColumnName="IsDeleted" />
-                <ScalarProperty Name="Cabinet_id" ColumnName="Cabinet_id" />
+                <ScalarProperty Name="Cabinet" ColumnName="Cabinet" />
                 <ScalarProperty Name="Duration" ColumnName="Duration" />
                 <ScalarProperty Name="Capacity" ColumnName="Capacity" />
                 <ScalarProperty Name="Name" ColumnName="Name" />
@@ -1083,6 +1027,7 @@
           <EntitySetMapping Name="User">
             <EntityTypeMapping TypeName="SchoolModel.User">
               <MappingFragment StoreEntitySet="User">
+                <ScalarProperty Name="IsDeleted" ColumnName="IsDeleted" />
                 <ScalarProperty Name="Role_ID" ColumnName="Role_ID" />
                 <ScalarProperty Name="Password" ColumnName="Password" />
                 <ScalarProperty Name="Login" ColumnName="Login" />

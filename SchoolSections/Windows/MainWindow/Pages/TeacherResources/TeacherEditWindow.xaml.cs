@@ -1,13 +1,13 @@
-﻿using SchoolSections.Components.Converters;
+﻿using Microsoft.Win32;
+using SchoolSections.Components.Converters;
 using SchoolSections.Components.PartialClasses;
 using SchoolSections.DatabaseConnection;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
-using System.Data.Entity.Core.Metadata.Edm;
+using System.IO;
 using System.Linq;
-using System.Net.Sockets;
 using System.Text.RegularExpressions;
 using System.Windows;
 using System.Windows.Controls;
@@ -52,7 +52,7 @@ namespace SchoolSections.Windows.MainWindow.Pages.TeacherResources
             set
             {
                 SetValue(TimetablesProperty, value);
-                Sections = DatabaseContext.Entities.Section.Local;
+                Sections = new ObservableCollection<Section>(DatabaseContext.Entities.Section.Local.Where(s => s.IsDeleted != true));
                 SectionsView = new CollectionView(Sections)
                 {
                     Filter = (section) => !value.Any(timetable => timetable.Manager.Section == section)
@@ -64,9 +64,7 @@ namespace SchoolSections.Windows.MainWindow.Pages.TeacherResources
         public static readonly DependencyProperty TimetablesProperty =
             DependencyProperty.Register("Timetables", typeof(ObservableCollection<FullTimetable>), typeof(TeacherEditWindow));
         #endregion
-
-
-
+        #region Sections
         public ObservableCollection<Section> Sections
         {
             get { return (ObservableCollection<Section>)GetValue(SectionsProperty); }
@@ -76,6 +74,7 @@ namespace SchoolSections.Windows.MainWindow.Pages.TeacherResources
         // Using a DependencyProperty as the backing store for Sections.  This enables animation, styling, binding, etc...
         public static readonly DependencyProperty SectionsProperty =
             DependencyProperty.Register("Sections", typeof(ObservableCollection<Section>), typeof(TeacherEditWindow));
+        #endregion
 
         public CollectionView SectionsView
         {
@@ -109,7 +108,7 @@ namespace SchoolSections.Windows.MainWindow.Pages.TeacherResources
                 return;
             }
 
-            ObservableCollection<Timetable> managerTimetables = DatabaseContext.Entities.Timetable.Local;
+            ObservableCollection<Timetable> managerTimetables = new ObservableCollection<Timetable>(DatabaseContext.Entities.Timetable.Local.Where(t => t.IsDeleted != true));
             foreach (var timetable in Timetables)
             {
                 IEnumerable<Timetable> tables = managerTimetables.Where(table => table.Manager == timetable.Manager);
@@ -117,13 +116,13 @@ namespace SchoolSections.Windows.MainWindow.Pages.TeacherResources
                 {
                     Timetable currentTimetable = tables.FirstOrDefault(table => table.DayOfWeek_id == (int)weekDay);
                     if (currentTimetable == null)
-                        managerTimetables.Add(currentTimetable = new Timetable()
+                        DatabaseContext.Entities.Timetable.Add(currentTimetable = new Timetable()
                         {
                             DayOfWeek_id = (int)weekDay,
                         });
                     currentTimetable.Manager = timetable.Manager;
                     currentTimetable.Time = timetable[weekDay];
-                    currentTimetable.Manager.Section.Cabinet.Number = timetable.Cabinet;
+                    currentTimetable.Manager.Section.Cabinet = timetable.Cabinet;
                 }
             }
             DatabaseContext.Entities.SaveChanges();
@@ -163,7 +162,7 @@ namespace SchoolSections.Windows.MainWindow.Pages.TeacherResources
             if (Teacher == null)
                 DatabaseContext.Entities.Teacher.Add(Teacher = new Teacher());
 
-            if (Teacher.Image == null)
+            if (Teacher.TeacherImage == null)
                 Teacher.TeacherImage = new TeacherImage();
 
             Teacher.TeacherImage.Image_Data = Image.Source.ConvertToArray();
@@ -209,7 +208,12 @@ namespace SchoolSections.Windows.MainWindow.Pages.TeacherResources
         private void OnRemoveTimetableClick(object sender, RoutedEventArgs e)
         {
             var timetables = TimetableContainer.SelectedItems.Cast<FullTimetable>();
-            
+            foreach (var fulltimetable in timetables.ToList())
+            {
+                foreach (var timetable in fulltimetable.Timetables)
+                    timetable.IsDeleted = true;
+                Timetables.Remove(fulltimetable);
+            }
         }
 
         private void OnAddTimetableClick(object sender, RoutedEventArgs e) =>
@@ -237,9 +241,18 @@ namespace SchoolSections.Windows.MainWindow.Pages.TeacherResources
             MessageBox.Show(string.Join(", ", (TimetableContainer.SelectedItem as FullTimetable).GetTimeConflicts(Timetables)));
         }
 
-        private void OnBeginningEdit(object sender, DataGridBeginningEditEventArgs e)
+        private void OnImageClick(object sender, System.Windows.Input.MouseButtonEventArgs e)
         {
-            
+            OpenFileDialog fileDialog = new OpenFileDialog()
+            {
+                Filter = "Image Files (*.png, *.jpg, *.jpeg)|*.png|*.jpg|*.jpeg",
+                DefaultExt = "Image Files (*.png, *.jpg, *.jpeg)|*.png|*.jpg|*.jpeg",
+                CheckFileExists = true,
+                Multiselect = false
+            };
+
+            if (fileDialog.ShowDialog() != false)
+                Image.Source = File.ReadAllBytes(fileDialog.FileName).ConvertFromArray();
         }
     }
 }

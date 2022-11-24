@@ -1,5 +1,6 @@
 ﻿using SchoolSections.DatabaseConnection;
 using System.Collections.ObjectModel;
+using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
 
@@ -26,7 +27,7 @@ namespace SchoolSections.Windows.MainWindow.Pages.GroupResources
         {
             InitializeComponent();
 
-            Managers = DatabaseContext.Entities.Manager.Local;
+            Managers = new ObservableCollection<Manager>(DatabaseContext.Entities.Manager.Local.Where(m => m.IsDeleted != true));
         }
 
         public void OnAttendanceClick(Manager manager)

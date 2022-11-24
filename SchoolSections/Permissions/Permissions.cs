@@ -11,7 +11,20 @@ namespace SchoolSections.Permissions
     {
         private static readonly Dictionary<PermissionRole, Permission[]> ProhibitionPermissions = new Dictionary<PermissionRole, Permission[]>()
         {
-            
+            { PermissionRole.Director, new[]
+                {
+                    Permission.ShowMyGroups,
+                    Permission.MakeAttendance
+                }
+            },
+            { PermissionRole.Teacher, new[]
+                {
+                    Permission.ShowSectionsButton,
+                    Permission.ShowGroupsButton,
+                    Permission.ShowTeachersButton,
+                    Permission.Statistics
+                }
+            }
         };
 
         public static bool Has(this Permission permission)
@@ -43,6 +56,11 @@ namespace SchoolSections.Permissions
 
     public enum Permission
     {
-        Add
+        ShowMyGroups,
+        ShowSectionsButton,
+        ShowTeachersButton,
+        ShowGroupsButton,
+        MakeAttendance,
+        Statistics
     }
 }

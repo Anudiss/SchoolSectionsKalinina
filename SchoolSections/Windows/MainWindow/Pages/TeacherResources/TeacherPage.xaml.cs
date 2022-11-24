@@ -1,7 +1,7 @@
 ﻿using SchoolSections.DatabaseConnection;
 using System.Collections.ObjectModel;
 using System.Data.Entity;
-using System.Text.RegularExpressions;
+using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
 
@@ -29,7 +29,7 @@ namespace SchoolSections.Windows.MainWindow.Pages.TeacherResources
             InitializeComponent();
 
             DatabaseContext.Entities.Teacher.Load();
-            Teachers = DatabaseContext.Entities.Teacher.Local;
+            Teachers = new ObservableCollection<Teacher>(DatabaseContext.Entities.Teacher.Local.Where(t => t.IsDeleted != true));
         }
 
         private void OnSearch(object sender, TextChangedEventArgs e)
@@ -44,11 +44,6 @@ namespace SchoolSections.Windows.MainWindow.Pages.TeacherResources
             };
         }
 
-        private void OnAddClick(object sender, RoutedEventArgs e)
-        {
-
-        }
-
         public void OnTeacherEdit(Teacher teacher)
         {
             new TeacherEditWindow()
@@ -59,10 +54,9 @@ namespace SchoolSections.Windows.MainWindow.Pages.TeacherResources
 
         public void OnTeacherRemove(Teacher teacher)
         {
-            new TeacherEditWindow()
-            {
-                Teacher = teacher
-            }.ShowDialog();
+            teacher.Delete();
+            Teachers.Remove(teacher);
+            DatabaseContext.Entities.SaveChanges();
         }
     }
 }

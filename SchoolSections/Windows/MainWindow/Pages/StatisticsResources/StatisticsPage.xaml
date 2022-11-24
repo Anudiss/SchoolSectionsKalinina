@@ -1,0 +1,50 @@
+﻿<Page x:Class="SchoolSections.Windows.MainWindow.Pages.StatisticsResources.StatisticsPage"
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+      xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+      xmlns:local="clr-namespace:SchoolSections.Windows.MainWindow.Pages.StatisticsResources"
+      mc:Ignorable="d"
+      Title="StatisticsPage"
+      Name="StatisticsPageRoot">
+
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+
+        <StackPanel Grid.Row="0" Orientation="Horizontal" HorizontalAlignment="Right"
+                    Margin="10 5">
+            <ComboBox Name="MonthSelector" SelectionChanged="MonthSelector_SelectionChanged"/>
+            <ComboBox Name="YearSelector" Margin="20 0 0 0" SelectionChanged="YearSelector_SelectionChanged"/>
+        </StackPanel>
+        
+        <TabControl Grid.Row="1">
+            <TabItem Header="Лучшие ученики">
+                <DataGrid ItemsSource="{Binding ElementName=StatisticsPageRoot, Path=Students}"
+                          IsReadOnly="True" AutoGenerateColumns="False"
+                          CanUserReorderColumns="False" CanUserSortColumns="False"
+                          HorizontalAlignment="Center">
+                
+                    <DataGrid.Columns>
+                        <DataGridTextColumn Width="*" Header="Ученик" Binding="{Binding Path=Student.FullName}" FontSize="20" FontWeight="SemiBold"/>
+                        <DataGridTextColumn Width="*" Header="Количество посещений" Binding="{Binding Path=AttendanceCount}" FontSize="20"/>
+                    </DataGrid.Columns>
+                </DataGrid>
+            </TabItem>
+            <TabItem Header="Посещаемые секции">
+                <DataGrid ItemsSource="{Binding ElementName=StatisticsPageRoot, Path=SectionAttendance}"
+                          HorizontalAlignment="Center"
+                          AutoGenerateColumns="False"
+                          IsReadOnly="False"
+                          CanUserSortColumns="False" CanUserReorderColumns="False" CanUserResizeColumns="False">
+                    <DataGrid.Columns>
+                        <DataGridTextColumn Header="Кружок" Binding="{Binding Path=Section.Name}" FontSize="20" FontWeight="SemiBold"/>
+                        <DataGridTextColumn Header="Количество посещений" Binding="{Binding Path=AttendanceCount}" FontSize="20" FontWeight="SemiBold"/>
+                    </DataGrid.Columns>
+                </DataGrid>
+            </TabItem>
+        </TabControl>
+    </Grid>
+</Page>

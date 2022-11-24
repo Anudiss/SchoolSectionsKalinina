@@ -4,13 +4,14 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:SchoolSections.Windows.MainWindow.Pages.GroupResources"
+        xmlns:permission="clr-namespace:SchoolSections.Permissions"
         mc:Ignorable="d"
         SizeToContent="WidthAndHeight" WindowStartupLocation="CenterScreen"
-        Title="GroupEditWindow"
+        Title="Посещаемость"
         Name="GroupEditWindowRoot"
         Loaded="OnLoaded">
 
-    <Grid>
+    <Grid Margin="20 10">
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="*"/>
@@ -37,7 +38,8 @@
                       CanUserReorderColumns="False" CanUserDeleteRows="False" CanUserAddRows="False"
                       ItemsSource="{Binding ElementName=GroupEditWindowRoot, Path=Attendance}">
             </DataGrid>
-            <Button Content="Сохранить" Style="{StaticResource Button}" Click="OnSave"/>
+            <Button Content="Сохранить" Style="{StaticResource Button}" Click="OnSave" Visibility="{Binding Converter={StaticResource PermissionToVisibilityConverter},
+                                                                                                             ConverterParameter={x:Static permission:Permission.MakeAttendance}}"/>
         </StackPanel>
     </Grid>
 </Window>
